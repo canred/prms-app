@@ -1,4 +1,4 @@
-# viscanner
+# PRMS APP
 
 A new Flutter project.
 
