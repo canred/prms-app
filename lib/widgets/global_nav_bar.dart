@@ -50,7 +50,10 @@ class GlobalNavBarState extends State<GlobalNavBar> {
   @override
   Widget build(BuildContext context) {
     return CupertinoNavigationBar(
-      middle: Text(_title),
+      middle: Text(
+        _title,
+        style: const TextStyle(decoration: TextDecoration.underline),
+      ),
       backgroundColor: widget.backgroundColor,
       border: widget.showBorder ? null : Border.all(style: BorderStyle.none),
       leading: widget.leading,
