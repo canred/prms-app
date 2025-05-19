@@ -139,133 +139,212 @@ class _PageFun1State extends State<PageCunsume> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: 4,
-                        horizontal: screenWidth * 0.06,
+                        horizontal: screenWidth * 0.006,
                       ),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 2.0,
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(4),
-                                    child: CupertinoButton(
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 8,
-                                      ),
-                                      color:
-                                          page_stage == "User"
-                                              ? const Color(0xFF204080) // 深蓝色
-                                              : CupertinoColors.activeBlue,
-                                      onPressed: () {
-                                        setState(() {
-                                          page_stage = "User";
-                                          setState(() {
-                                            page_stage = "User";
-                                          });
-                                        });
-                                      },
-                                      child: const Text(
-                                        'User',
-                                        style: TextStyle(
-                                          fontSize: 14,
-                                          color: CupertinoColors.white,
-                                        ),
-                                      ),
-                                    ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: 4.0,
+                                  bottom: 4.0,
+                                ),
+                                child: Text(
+                                  'Flow Stage ( PR Consume ) :',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: CupertinoColors.systemGrey,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 2.0,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _buildStageButton(
+                                    context,
+                                    icon: CupertinoIcons.person,
+                                    label: 'User',
+                                    selected: page_stage == "User",
+                                    onTap: () {
+                                      setState(() {
+                                        page_stage = "User";
+                                      });
+                                    },
                                   ),
-                                  child: CupertinoButton(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
-                                    ),
-                                    color:
-                                        page_stage == "Machine"
-                                            ? const Color(0xFF204080) // 深蓝色
-                                            : CupertinoColors.activeBlue,
-                                    onPressed: () {
-                                      page_stage = "Machine";
+                                  _buildStageButton(
+                                    context,
+                                    icon:
+                                        CupertinoIcons
+                                            .gear_big, // 更贴合“机台/生产设备”的图标
+                                    label: 'Machine',
+                                    selected: page_stage == "Machine",
+                                    onTap: () {
                                       setState(() {
                                         page_stage = "Machine";
                                       });
                                     },
-                                    child: const Text(
-                                      'Machine',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: CupertinoColors.white,
-                                      ),
-                                    ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 2.0,
-                                  ),
-                                  child: CupertinoButton(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
+                                  _buildStageButton(
+                                    context,
+                                    iconWidget: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.drop_fill,
+                                          size: 16,
+                                          color:
+                                              page_stage == "Old_PR"
+                                                  ? Color(
+                                                    0xFFB8860B,
+                                                  ) // 深金色/棕色，代表“旧”
+                                                  : Color(
+                                                    0xFFB8860B,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                        SizedBox(width: 2),
+                                        Icon(
+                                          CupertinoIcons.barcode,
+                                          size: 16,
+                                          color:
+                                              page_stage == "Old_PR"
+                                                  ? Color(0xFFB8860B) // 同上
+                                                  : Color(
+                                                    0xFFB8860B,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
                                     ),
-                                    color:
-                                        page_stage == "Change"
-                                            ? const Color(0xFF204080) // 深蓝色
-                                            : CupertinoColors.activeBlue,
-                                    onPressed: () {
-                                      page_stage = "Change";
+                                    label: 'Old PR',
+                                    selected: page_stage == "Old_PR",
+                                    onTap: () {
                                       setState(() {
-                                        page_stage = "Change";
+                                        page_stage = "Old_PR";
                                       });
                                     },
-                                    child: const Text(
-                                      'Change',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: CupertinoColors.white,
-                                      ),
-                                    ),
                                   ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 2.0,
-                                  ),
-                                  child: CupertinoButton(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
+                                  _buildStageButton(
+                                    context,
+                                    iconWidget: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.arrow_merge,
+                                          size: 16,
+                                          color:
+                                              page_stage == "Old_Tube"
+                                                  ? Color(
+                                                    0xFFB8860B,
+                                                  ) // 深金色/棕色，代表“旧”
+                                                  : Color(
+                                                    0xFFB8860B,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                        SizedBox(width: 2),
+                                        Icon(
+                                          CupertinoIcons.barcode,
+                                          size: 16,
+                                          color:
+                                              page_stage == "Old_Tube"
+                                                  ? Color(0xFFB8860B) // 同上
+                                                  : Color(
+                                                    0xFFB8860B,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
                                     ),
-                                    color:
-                                        page_stage == "Old"
-                                            ? const Color(0xFF204080) // 深蓝色
-                                            : CupertinoColors.activeBlue,
-                                    onPressed: () {
-                                      page_stage = "Old";
+                                    label: 'Old Tube',
+                                    selected: page_stage == "Old_Tube",
+                                    onTap: () {
                                       setState(() {
-                                        page_stage = "Old";
+                                        page_stage = "Old_Tube";
                                       });
                                     },
-                                    child: const Text(
-                                      'Old',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: CupertinoColors.white,
-                                      ),
-                                    ),
                                   ),
-                                ),
+                                  _buildStageButton(
+                                    context,
+                                    iconWidget: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.drop_fill,
+                                          size: 16,
+                                          color:
+                                              page_stage == "New_PR"
+                                                  ? Color(
+                                                    0xFF1E90FF,
+                                                  ) // Dodger Blue，代表“新”
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                        SizedBox(width: 2),
+                                        Icon(
+                                          CupertinoIcons.barcode,
+                                          size: 16,
+                                          color:
+                                              page_stage == "New_PR"
+                                                  ? Color(0xFF1E90FF) // 同上
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
+                                    ),
+                                    label: 'New PR',
+                                    selected: page_stage == "New_PR",
+                                    onTap: () {
+                                      setState(() {
+                                        page_stage = "New_PR";
+                                      });
+                                    },
+                                  ),
+                                  _buildStageButton(
+                                    context,
+                                    iconWidget: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.arrow_merge,
+                                          size: 16,
+                                          color:
+                                              page_stage == "New_Tube"
+                                                  ? Color(
+                                                    0xFF1E90FF,
+                                                  ) // Dodger Blue，代表“新”
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                        SizedBox(width: 2),
+                                        Icon(
+                                          CupertinoIcons.barcode,
+                                          size: 16,
+                                          color:
+                                              page_stage == "New_Tube"
+                                                  ? Color(0xFF1E90FF) // 同上
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
+                                    ),
+                                    label: 'New Tube',
+                                    selected: page_stage == "New_Tube",
+                                    onTap: () {
+                                      setState(() {
+                                        page_stage = "New_Tube";
+                                      });
+                                    },
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -286,7 +365,7 @@ class _PageFun1State extends State<PageCunsume> {
                                   )
                                   : page_stage == "Change"
                                   ? const Icon(
-                                    CupertinoIcons.cube, // 料件icon
+                                    CupertinoIcons.barcode, // 料件icon
                                     size: 40,
                                     color: CupertinoColors.activeBlue,
                                   )
@@ -461,6 +540,56 @@ class _PageFun1State extends State<PageCunsume> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  // 新增iOS风格按钮构建方法
+  Widget _buildStageButton(
+    BuildContext context, {
+    IconData? icon,
+    Widget? iconWidget,
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 2.0),
+        child: CupertinoButton(
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+          color:
+              selected ? const Color(0xFF204080) : CupertinoColors.systemGrey5,
+          borderRadius: BorderRadius.circular(8),
+          onPressed: onTap,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              iconWidget ??
+                  Icon(
+                    icon,
+                    size: 22,
+                    color:
+                        selected
+                            ? CupertinoColors.white
+                            : CupertinoColors.activeBlue,
+                  ),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color:
+                      selected
+                          ? CupertinoColors.white
+                          : CupertinoColors.systemGrey,
+                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
