@@ -174,6 +174,7 @@ class _PageFun1State extends State<PageCunsume> {
                                         page_stage = "User";
                                       });
                                     },
+                                    height: 56,
                                   ),
                                   _buildStageButton(
                                     context,
@@ -187,6 +188,7 @@ class _PageFun1State extends State<PageCunsume> {
                                         page_stage = "Machine";
                                       });
                                     },
+                                    height: 56,
                                   ),
                                   _buildStageButton(
                                     context,
@@ -226,6 +228,7 @@ class _PageFun1State extends State<PageCunsume> {
                                         page_stage = "Old_PR";
                                       });
                                     },
+                                    height: 56,
                                   ),
                                   _buildStageButton(
                                     context,
@@ -265,6 +268,7 @@ class _PageFun1State extends State<PageCunsume> {
                                         page_stage = "Old_Tube";
                                       });
                                     },
+                                    height: 56,
                                   ),
                                   _buildStageButton(
                                     context,
@@ -304,12 +308,15 @@ class _PageFun1State extends State<PageCunsume> {
                                         page_stage = "New_PR";
                                       });
                                     },
+                                    height: 56,
                                   ),
                                   _buildStageButton(
                                     context,
                                     iconWidget: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
+                                      mainAxisSize:
+                                          MainAxisSize.min, // 修正按钮内容宽度
                                       children: [
                                         Icon(
                                           CupertinoIcons.arrow_merge,
@@ -343,55 +350,203 @@ class _PageFun1State extends State<PageCunsume> {
                                         page_stage = "New_Tube";
                                       });
                                     },
+                                    height: 56,
                                   ),
                                 ],
                               ),
                             ],
                           ),
                           const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              page_stage == "User"
-                                  ? const Icon(
-                                    CupertinoIcons.person,
-                                    size: 40,
-                                    color: CupertinoColors.activeBlue,
-                                  )
-                                  : page_stage == "Machine"
-                                  ? const Icon(
-                                    CupertinoIcons.device_laptop, // 设备图标
-                                    size: 40,
-                                    color: CupertinoColors.activeBlue,
-                                  )
-                                  : page_stage == "Change"
-                                  ? const Icon(
-                                    CupertinoIcons.barcode, // 料件icon
-                                    size: 40,
-                                    color: CupertinoColors.activeBlue,
-                                  )
-                                  : const Icon(
-                                    CupertinoIcons.add_circled,
-                                    size: 40,
-                                    color: CupertinoColors.activeBlue,
-                                  ),
-                              SizedBox(width: 4),
-                              Text(
+                          // 加入灰色dash样式的水平线
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0,
+                            ),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                final dashWidth = 3.0;
+                                final dashSpace = 4.0;
+                                final dashCount =
+                                    (constraints.maxWidth /
+                                            (dashWidth + dashSpace))
+                                        .floor();
+                                return Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: List.generate(dashCount, (_) {
+                                    return Container(
+                                      width: dashWidth,
+                                      height: 1,
+                                      color: const Color(0xFF888888), // 深一点的灰色
+                                    );
+                                  }),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 10.0),
+                            child: Row(
+                              children: [
                                 page_stage == "User"
-                                    ? 'Scan Pass ID'
+                                    ? const Icon(
+                                      CupertinoIcons.person,
+                                      size: 28,
+                                      color: CupertinoColors.activeBlue,
+                                    )
                                     : page_stage == "Machine"
-                                    ? 'Scan Machine ID'
-                                    : page_stage == "Change"
-                                    ? 'Scan Change ID'
-                                    : 'Scan Old ID',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                                    ? const Icon(
+                                      CupertinoIcons.gear_alt, // 设备图标
+                                      size: 28,
+                                      color: CupertinoColors.activeBlue,
+                                    )
+                                    : page_stage == "Old_PR"
+                                    ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.drop_fill,
+                                          size: 24,
+                                          color:
+                                              page_stage == "Old_PR"
+                                                  ? Color(0xFFB8860B)
+                                                  : Color(
+                                                    0xFFB8860B,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                        SizedBox(width: 2),
+                                        Icon(
+                                          CupertinoIcons.barcode,
+                                          size: 24,
+                                          color:
+                                              page_stage == "Old_PR"
+                                                  ? Color(0xFFB8860B)
+                                                  : Color(
+                                                    0xFFB8860B,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
+                                    )
+                                    : page_stage == "Old_Tube"
+                                    ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.arrow_merge,
+                                          size: 24,
+                                          color:
+                                              page_stage == "Old_Tube"
+                                                  ? Color(0xFFB8860B)
+                                                  : Color(
+                                                    0xFFB8860B,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                        SizedBox(width: 2),
+                                        Icon(
+                                          CupertinoIcons.barcode,
+                                          size: 24,
+                                          color:
+                                              page_stage == "Old_Tube"
+                                                  ? Color(0xFFB8860B)
+                                                  : Color(
+                                                    0xFFB8860B,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
+                                    )
+                                    : page_stage == "New_PR"
+                                    ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.drop_fill,
+                                          size: 24,
+                                          color:
+                                              page_stage == "New_PR"
+                                                  ? Color(0xFF1E90FF)
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                        SizedBox(width: 2),
+                                        Icon(
+                                          CupertinoIcons.barcode,
+                                          size: 24,
+                                          color:
+                                              page_stage == "New_PR"
+                                                  ? Color(0xFF1E90FF)
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
+                                    )
+                                    : page_stage == "New_Tube"
+                                    ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons.arrow_merge,
+                                          size: 24,
+                                          color:
+                                              page_stage == "New_Tube"
+                                                  ? Color(0xFF1E90FF)
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                        SizedBox(width: 2),
+                                        Icon(
+                                          CupertinoIcons.barcode,
+                                          size: 24,
+                                          color:
+                                              page_stage == "New_Tube"
+                                                  ? Color(0xFF1E90FF)
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
+                                    )
+                                    : const Icon(
+                                      CupertinoIcons.add_circled,
+                                      size: 28,
+                                      color: CupertinoColors.activeBlue,
+                                    ),
+                                SizedBox(width: 4),
+                                Text(
+                                  page_stage == "User"
+                                      ? 'Scan the barcode on your employee ID card.'
+                                      : page_stage == "Machine"
+                                      ? 'Scan the barcode on the machine.'
+                                      : page_stage == "Old_PR"
+                                      ? 'Scan the barcode on the old PR Bottle.'
+                                      : page_stage == "Old_Tube"
+                                      ? 'Scan the barcode on the tuble (pipeline).'
+                                      : page_stage == "New_PR"
+                                      ? 'Scan the barcode on the new PR Bottle.'
+                                      : page_stage == "New_Tube"
+                                      ? 'Scan the barcode on the tuble (pipeline).'
+                                      : 'Scan Old ID',
+                                  style: TextStyle(fontSize: 14),
                                 ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: Text(
+                              'Scan your barcode or QR code in the box.',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: const Color.fromARGB(255, 222, 60, 60),
                               ),
-                            ],
+                            ),
                           ),
 
-                          const SizedBox(height: 16),
                           // 我要加入 MobileScanner 功能
                           VisibilityDetector(
                             key: _scannerVisibilityKey,
@@ -417,6 +572,7 @@ class _PageFun1State extends State<PageCunsume> {
                                 _scannerController.stop();
                               }
                             },
+
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
@@ -427,13 +583,13 @@ class _PageFun1State extends State<PageCunsume> {
                                       child: SizedBox(
                                         width: deviceSize.width,
                                         height:
-                                            deviceSize.height * 0.3, // 限制高度比例
+                                            deviceSize.height * 0.4, // 限制高度比例
                                         child: SizedBox(
                                           width: double.infinity,
                                           height: 60,
                                           child: ClipRRect(
                                             borderRadius: BorderRadius.circular(
-                                              8,
+                                              4,
                                             ), // 可选：圆角
                                             child: MobileScanner(
                                               controller: _scannerController,
@@ -487,30 +643,6 @@ class _PageFun1State extends State<PageCunsume> {
                             ),
                           ),
                           SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CupertinoButton(
-                                color: CupertinoColors.activeGreen,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 24,
-                                  vertical: 10,
-                                ),
-                                borderRadius: BorderRadius.circular(8),
-                                onPressed: () {
-                                  // TODO: 按钮点击事件
-                                  debugPrint('新按钮被点击');
-                                },
-                                child: const Text(
-                                  '新按钮',
-                                  style: TextStyle(
-                                    color: CupertinoColors.white,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
                     ),
@@ -526,10 +658,11 @@ class _PageFun1State extends State<PageCunsume> {
                           right: screenWidth * 0.1,
                         ),
                         child: const Text(
-                          'Copyright © 2025 VIS,VSMC. All rights reserved.',
+                          'User Id : 220653 \\ HHchenx',
                           style: TextStyle(
-                            color: CupertinoColors.systemGrey,
-                            fontSize: 13.0,
+                            color: Color.fromARGB(255, 0, 0, 255),
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -553,42 +686,48 @@ class _PageFun1State extends State<PageCunsume> {
     required String label,
     required bool selected,
     required VoidCallback onTap,
+    double height = 48, // 新增height参数，默认48
   }) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 2.0),
-        child: CupertinoButton(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-          color:
-              selected ? const Color(0xFF204080) : CupertinoColors.systemGrey5,
-          borderRadius: BorderRadius.circular(8),
-          onPressed: onTap,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              iconWidget ??
-                  Icon(
-                    icon,
-                    size: 22,
+        child: SizedBox(
+          height: height, // 统一高度
+          child: CupertinoButton(
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+            color:
+                selected
+                    ? const Color(0xFF204080)
+                    : CupertinoColors.systemGrey5,
+            borderRadius: BorderRadius.circular(8),
+            onPressed: onTap,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                iconWidget ??
+                    Icon(
+                      icon,
+                      size: 22,
+                      color:
+                          selected
+                              ? CupertinoColors.white
+                              : CupertinoColors.activeBlue,
+                    ),
+                const SizedBox(height: 2),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 12,
                     color:
                         selected
                             ? CupertinoColors.white
-                            : CupertinoColors.activeBlue,
+                            : CupertinoColors.systemGrey,
+                    fontWeight: selected ? FontWeight.bold : FontWeight.normal,
                   ),
-              const SizedBox(height: 2),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 12,
-                  color:
-                      selected
-                          ? CupertinoColors.white
-                          : CupertinoColors.systemGrey,
-                  fontWeight: selected ? FontWeight.bold : FontWeight.normal,
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
