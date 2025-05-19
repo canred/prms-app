@@ -42,6 +42,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // 更换光阻液
                   Container(
                     margin: EdgeInsets.only(bottom: 6),
                     decoration: BoxDecoration(
@@ -62,8 +63,9 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                           ),
                         );
                       },
+                      // 更换光阻液
                       child: const Text(
-                        '更换光阻液',
+                        'Consume',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -72,6 +74,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                       ),
                     ),
                   ),
+                  // 光阻液上防爆柜
                   Container(
                     margin: EdgeInsets.only(bottom: 6),
                     decoration: BoxDecoration(
@@ -89,7 +92,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                         print('Button 2 clicked');
                       },
                       child: const Text(
-                        '更换光阻液',
+                        'Move In Rack',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -98,6 +101,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                       ),
                     ),
                   ),
+                  // 光阻液下防爆柜
                   Container(
                     margin: EdgeInsets.only(bottom: 6),
                     decoration: BoxDecoration(
@@ -115,7 +119,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                         print('Button 3 clicked');
                       },
                       child: const Text(
-                        '更换光阻液',
+                        'Move Out Rack',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -124,6 +128,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                       ),
                     ),
                   ),
+                  // 光阻液上机
                   Container(
                     margin: EdgeInsets.only(bottom: 6),
                     decoration: BoxDecoration(
@@ -141,7 +146,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                         print('Button 4 clicked');
                       },
                       child: const Text(
-                        '更换光阻液',
+                        'Put On Flow',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -150,6 +155,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                       ),
                     ),
                   ),
+                  // 光阻液下机
                   Container(
                     margin: EdgeInsets.only(bottom: 6),
                     decoration: BoxDecoration(
@@ -167,7 +173,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                         print('Button 5 clicked');
                       },
                       child: const Text(
-                        '更换光阻液',
+                        'Take Off Flow',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -176,6 +182,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                       ),
                     ),
                   ),
+                  // 光阻液解除 Alert
                   Container(
                     margin: EdgeInsets.only(bottom: 0),
                     decoration: BoxDecoration(
@@ -193,7 +200,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                         print('Button 6 clicked');
                       },
                       child: const Text(
-                        '更换光阻液',
+                        'Clean Flow',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,

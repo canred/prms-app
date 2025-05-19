@@ -1,0 +1,2 @@
+/Users/user/Documents/GitHub/prms-app/android/app/.cxx/Debug/56344d3l/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/user/Documents/GitHub/prms-app/android/app/.cxx/Debug/56344d3l/armeabi-v7a/CMakeFiles/rebuild_cache.dir
