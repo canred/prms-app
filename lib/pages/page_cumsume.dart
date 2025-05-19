@@ -6,15 +6,15 @@ import 'package:viscanner/widgets/global_nav_bar_export.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
 
-class PageFun1 extends StatefulWidget {
+class PageCunsume extends StatefulWidget {
   final GlobalKey<GlobalNavBarState>? navBarKey;
-  const PageFun1({super.key, this.navBarKey});
+  const PageCunsume({super.key, this.navBarKey});
 
   @override
-  State<PageFun1> createState() => _PageFun1State();
+  State<PageCunsume> createState() => _PageFun1State();
 }
 
-class _PageFun1State extends State<PageFun1> {
+class _PageFun1State extends State<PageCunsume> {
   /// 控制相機掃描功能的控制器
   final MobileScannerController _scannerController = MobileScannerController(
     autoStart: false,
@@ -25,7 +25,11 @@ class _PageFun1State extends State<PageFun1> {
   );
 
   final Key _scannerVisibilityKey = UniqueKey();
-  String page_stage = "ID"; // Machine , Change, Old
+
+  // 分别为5个阶段的处理作业
+  // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
+  String page_stage =
+      "User "; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
 
   @override
   void initState() {
@@ -154,19 +158,19 @@ class _PageFun1State extends State<PageFun1> {
                                         vertical: 8,
                                       ),
                                       color:
-                                          page_stage == "ID"
+                                          page_stage == "User"
                                               ? const Color(0xFF204080) // 深蓝色
                                               : CupertinoColors.activeBlue,
                                       onPressed: () {
                                         setState(() {
-                                          page_stage = "ID";
+                                          page_stage = "User";
                                           setState(() {
-                                            page_stage = "ID";
+                                            page_stage = "User";
                                           });
                                         });
                                       },
                                       child: const Text(
-                                        'ID',
+                                        'User',
                                         style: TextStyle(
                                           fontSize: 14,
                                           color: CupertinoColors.white,
@@ -265,10 +269,10 @@ class _PageFun1State extends State<PageFun1> {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 8),
                           Row(
                             children: [
-                              page_stage == "ID"
+                              page_stage == "User"
                                   ? const Icon(
                                     CupertinoIcons.person,
                                     size: 40,
@@ -291,9 +295,9 @@ class _PageFun1State extends State<PageFun1> {
                                     size: 40,
                                     color: CupertinoColors.activeBlue,
                                   ),
-                              SizedBox(width: 8),
+                              SizedBox(width: 4),
                               Text(
-                                page_stage == "ID"
+                                page_stage == "User"
                                     ? 'Scan Pass ID'
                                     : page_stage == "Machine"
                                     ? 'Scan Machine ID'
@@ -301,7 +305,7 @@ class _PageFun1State extends State<PageFun1> {
                                     ? 'Scan Change ID'
                                     : 'Scan Old ID',
                                 style: TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

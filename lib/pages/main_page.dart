@@ -34,7 +34,7 @@ class _PartsPageState extends State<MainPage> {
     super.initState();
     // 使用 widget.initialTabIndex 作為初始標籤索引
     _selectedIndex = widget.initialTabIndex;
-    globalNavBar = GlobalNavBar(title: "PRMS APP main page");
+    globalNavBar = GlobalNavBar(title: "PRMS APP");
   }
 
   void _onTabTapped(int index) {
