@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:prms/main.dart';
+import 'package:prms/utility/prms_data_check.dart';
 import 'package:prms/widgets/binding_prms_card.dart';
 import 'package:prms/widgets/global_nav_bar.dart';
 import 'package:prms/widgets/global_nav_bar_export.dart';
+import 'package:prms/widgets/toast_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
 
@@ -92,49 +95,58 @@ class _PageFun1State extends State<PageCunsume> {
         debugPrint('掃描結果: $scanContent');
         if (page_stage == "User") {
           // 当符合 员工ID 的格式时，才会更新 p_user_id
-          // TODO: 這邊可以加入正規表達式判斷
-          setState(() {
-            p_user_id = scanContent;
-            page_stage = "Machine";
-          });
+          // scanContent 必須是6位數字，
+          if (PrmsDataCheck.isValidUserId(scanContent)) {
+            setState(() {
+              p_user_id = scanContent;
+              page_stage = "Machine";
+            });
+          }
         } else if (page_stage == "Machine") {
           // 当符合 Machine ID 的格式时，才会更新 p_machine_id
-          // TODO: 這邊可以加入正規表達式判斷
-          setState(() {
-            p_machine_id = scanContent;
-            page_stage = "Old_PR";
-          });
+          // 以M開頭+5位數字，可依實際需求調整
+          if (PrmsDataCheck.isValidMachineId(scanContent)) {
+            setState(() {
+              p_machine_id = scanContent;
+              page_stage = "Old_PR";
+            });
+          }
         } else if (page_stage == "Old_PR") {
           // 当符合 Old PR ID 的格式时，才会更新 p_old_pr_id
-          // TODO: 這邊可以加入正規表達式判斷
-          setState(() {
-            p_old_pr_id = scanContent;
-            page_stage = "Old_Tube";
-          });
+          // PR開頭+6位數字，可依實際需求調整
+          if (PrmsDataCheck.isValidPrId(scanContent)) {
+            setState(() {
+              p_old_pr_id = scanContent;
+              page_stage = "Old_Tube";
+            });
+          }
         } else if (page_stage == "Old_Tube") {
           // 当符合 Old Tube ID 的格式时，才会更新 p_old_pr_id
-          // TODO: 這邊可以加入正規表達式判斷
-          setState(() {
-            p_old_tube_id = scanContent;
-            page_stage = "New_PR";
-          });
+          // TUBE開頭+6位數字，可依實際需求調整
+          if(PrmsDataCheck.isValidTubeId(scanContent)) {
+            setState(() {
+              p_old_tube_id = scanContent;
+              page_stage = "New_PR";
+            });
+          }
         } else if (page_stage == "New_PR") {
           // 当符合 New PR ID 的格式时，才会更新 p_old_pr_id
-          // TODO: 這邊可以加入正規表達式判斷
-          setState(() {
-            p_new_pr_id = scanContent;
-            page_stage = "New_Tube";
-          });
+          // PR開頭+6位數字，可依實際需求調整
+          if (PrmsDataCheck.isValidPrId(scanContent)) {
+            setState(() {
+              p_new_pr_id = scanContent;
+              page_stage = "New_Tube";
+            });
+          }
         } else if (page_stage == "New_Tube") {
           // 当符合 New Tube ID 的格式时，才会更新 p_old_pr_id
-          // TODO: 這邊可以加入正規表達式判斷
-          setState(() {
-            p_new_tube_id = scanContent;
-            if (checkStage()) {
-              // 如果所有阶段都完成，显示对话框
+          // TUBE開頭+6位數字，可依實際需求調整
+          if(PrmsDataCheck.isValidTubeId(scanContent)) {
+            setState(() {
+              p_new_tube_id = scanContent;
               page_stage = "Complete";
-            }
-          });
+            });
+          }
         }
 
         // 在這裡可以根據需要處理掃描結果，例如顯示對話框或更新畫面
@@ -632,7 +644,8 @@ class _PageFun1State extends State<PageCunsume> {
                                         letterSpacing: 1.2,
                                         shadows: [
                                           Shadow(
-                                            color: CupertinoColors.systemGrey.withOpacity(0.18),
+                                            color: CupertinoColors.systemGrey
+                                                .withOpacity(0.18),
                                             offset: Offset(0, 2),
                                             blurRadius: 4,
                                           ),
@@ -646,7 +659,8 @@ class _PageFun1State extends State<PageCunsume> {
                                         borderRadius: BorderRadius.circular(12),
                                         boxShadow: [
                                           BoxShadow(
-                                            color: CupertinoColors.systemGrey4.withOpacity(0.12),
+                                            color: CupertinoColors.systemGrey4
+                                                .withOpacity(0.12),
                                             blurRadius: 8,
                                             offset: Offset(0, 2),
                                           ),
@@ -658,17 +672,45 @@ class _PageFun1State extends State<PageCunsume> {
                                       ),
                                       child: Column(
                                         children: [
-                                          _buildInfoRowStyled('User Id', p_user_id, CupertinoIcons.person),
+                                          _buildInfoRowStyled(
+                                            'User Id',
+                                            p_user_id,
+                                            CupertinoIcons.person,
+                                          ),
                                           _buildDivider(),
-                                          _buildInfoRowStyled('Machine Id', p_machine_id, CupertinoIcons.gear_alt),
+                                          _buildInfoRowStyled(
+                                            'Machine Id',
+                                            p_machine_id,
+                                            CupertinoIcons.gear_alt,
+                                          ),
                                           _buildDivider(),
-                                          _buildInfoRowStyled('Old PR Id', p_old_pr_id, CupertinoIcons.drop_fill, color: Color(0xFFB8860B)),
+                                          _buildInfoRowStyled(
+                                            'Old PR Id',
+                                            p_old_pr_id,
+                                            CupertinoIcons.drop_fill,
+                                            color: Color(0xFFB8860B),
+                                          ),
                                           _buildDivider(),
-                                          _buildInfoRowStyled('Old Tube Id', p_old_tube_id, CupertinoIcons.arrow_merge, color: Color(0xFFB8860B)),
+                                          _buildInfoRowStyled(
+                                            'Old Tube Id',
+                                            p_old_tube_id,
+                                            CupertinoIcons.arrow_merge,
+                                            color: Color(0xFFB8860B),
+                                          ),
                                           _buildDivider(),
-                                          _buildInfoRowStyled('New PR Id', p_new_pr_id, CupertinoIcons.drop_fill, color: Color(0xFF1E90FF)),
+                                          _buildInfoRowStyled(
+                                            'New PR Id',
+                                            p_new_pr_id,
+                                            CupertinoIcons.drop_fill,
+                                            color: Color(0xFF1E90FF),
+                                          ),
                                           _buildDivider(),
-                                          _buildInfoRowStyled('New Tube Id', p_new_tube_id, CupertinoIcons.arrow_merge, color: Color(0xFF1E90FF)),
+                                          _buildInfoRowStyled(
+                                            'New Tube Id',
+                                            p_new_tube_id,
+                                            CupertinoIcons.arrow_merge,
+                                            color: Color(0xFF1E90FF),
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -677,39 +719,68 @@ class _PageFun1State extends State<PageCunsume> {
                                       child: SizedBox(
                                         width: 200,
                                         child: GestureDetector(
-                                          onTapDown: (_) => setState(() => _isButtonPressed = true),
-                                          onTapUp: (_) => setState(() => _isButtonPressed = false),
-                                          onTapCancel: () => setState(() => _isButtonPressed = false),
+                                          onTapDown:
+                                              (_) => setState(
+                                                () => _isButtonPressed = true,
+                                              ),
+                                          onTapUp:
+                                              (_) => setState(
+                                                () => _isButtonPressed = false,
+                                              ),
+                                          onTapCancel:
+                                              () => setState(
+                                                () => _isButtonPressed = false,
+                                              ),
                                           onTap: () {
                                             // TODO: 在这里处理确认逻辑
                                           },
                                           child: AnimatedScale(
-                                            scale: _isButtonPressed == true ? 0.96 : 1.0,
-                                            duration: Duration(milliseconds: 80),
+                                            scale:
+                                                _isButtonPressed == true
+                                                    ? 0.96
+                                                    : 1.0,
+                                            duration: Duration(
+                                              milliseconds: 80,
+                                            ),
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(vertical: 14),
+                                              padding: EdgeInsets.symmetric(
+                                                vertical: 14,
+                                              ),
                                               decoration: BoxDecoration(
-                                                color: CupertinoColors.activeBlue,
-                                                borderRadius: BorderRadius.circular(10),
+                                                color:
+                                                    CupertinoColors.activeBlue,
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                                 boxShadow: [
                                                   BoxShadow(
-                                                    color: CupertinoColors.systemGrey4.withOpacity(0.18),
+                                                    color: CupertinoColors
+                                                        .systemGrey4
+                                                        .withOpacity(0.18),
                                                     blurRadius: 8,
                                                     offset: Offset(0, 2),
                                                   ),
                                                 ],
                                               ),
                                               child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
                                                 children: [
-                                                  Icon(CupertinoIcons.paperplane_fill, color: CupertinoColors.white, size: 32),
+                                                  Icon(
+                                                    CupertinoIcons
+                                                        .paperplane_fill,
+                                                    color:
+                                                        CupertinoColors.white,
+                                                    size: 32,
+                                                  ),
                                                   SizedBox(width: 4),
                                                   Text(
                                                     'Confrim & Submit',
                                                     style: TextStyle(
                                                       fontSize: 18,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: CupertinoColors.white,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color:
+                                                          CupertinoColors.white,
                                                       letterSpacing: 0.3,
                                                     ),
                                                   ),
@@ -841,17 +912,17 @@ class _PageFun1State extends State<PageCunsume> {
                           right: screenWidth * 0.1,
                         ),
                         child: Text(
-                          page_stage == "User"
+                          page_stage == "User" && p_user_id.isNotEmpty
                               ? 'User Id : ${p_user_id}'
-                              : page_stage == "Machine"
+                              : page_stage == "Machine" && p_machine_id.isNotEmpty
                               ? 'Machine Id : ${p_machine_id}'
-                              : page_stage == "Old_PR"
+                              : page_stage == "Old_PR" && p_old_pr_id.isNotEmpty
                               ? 'Old PR Id : ${p_old_pr_id}'
-                              : page_stage == "Old_Tube"
-                              ? 'Old Tube Id : ${p_old_tube_id}'
-                              : page_stage == "New_PR"
+                              : page_stage == "Old_Tube" && p_old_tube_id.isNotEmpty
+                              ? 'Old Tube Id : ${p_old_tube_id}' 
+                              : page_stage == "New_PR" && p_new_pr_id.isNotEmpty
                               ? 'New PR Id : ${p_new_pr_id}'
-                              : page_stage == "New_Tube"
+                              : page_stage == "New_Tube" && p_new_tube_id.isNotEmpty
                               ? 'New Tube Id : ${p_new_tube_id}'
                               : '',
                           style: TextStyle(
@@ -960,7 +1031,12 @@ class _PageFun1State extends State<PageCunsume> {
   }
 
   // 專業iOS表單行（帶圖標與顏色）
-  Widget _buildInfoRowStyled(String label, String value, IconData icon, {Color? color}) {
+  Widget _buildInfoRowStyled(
+    String label,
+    String value,
+    IconData icon, {
+    Color? color,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
       child: Row(
