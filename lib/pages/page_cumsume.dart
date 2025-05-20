@@ -586,9 +586,14 @@ class _PageFun1State extends State<PageCunsume> {
                           ),
                           const SizedBox(height: 16),
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
+                            padding:
+                                page_stage == "Complete"
+                                    ? EdgeInsets.only(bottom: 0.0)
+                                    : EdgeInsets.only(bottom: 8.0),
                             child: Text(
-                              'Scan your barcode or QR code in the box.',
+                              page_stage == "Complete"
+                                  ? ""
+                                  : 'Scan your barcode or QR code in the box.',
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
@@ -598,100 +603,153 @@ class _PageFun1State extends State<PageCunsume> {
                           ),
 
                           // 我要加入 MobileScanner 功能
-                          VisibilityDetector(
-                            key: _scannerVisibilityKey,
-                            onVisibilityChanged: (visibilityInfo) {
-                              if (!mounted) return;
-                              final visibleFraction =
-                                  visibilityInfo.visibleFraction;
-                              debugPrint(
-                                'Scanner visibility: ${visibleFraction * 100}%',
-                              );
-
-                              if (visibleFraction > 0) {
-                                debugPrint(
-                                  'Scanner is visible, starting camera...',
-                                );
-                                _scannerController.start().catchError((error) {
-                                  debugPrint('Error starting camera: $error');
-                                });
-                              } else {
-                                debugPrint(
-                                  'Scanner is not visible, stopping camera...',
-                                );
-                                _scannerController.stop();
-                              }
-                            },
-
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Stack(
+                          page_stage == "Complete"
+                              ? Container(
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  color: CupertinoColors.systemGrey6,
+                                  borderRadius: BorderRadius.circular(12),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: CupertinoColors.systemGrey4
+                                          .withOpacity(0.2),
+                                      blurRadius: 8,
+                                      offset: Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    ClipRect(
-                                      // 使用ClipRect裁剪超出邊界部分
-                                      child: SizedBox(
-                                        width: deviceSize.width,
-                                        height:
-                                            deviceSize.height * 0.4, // 限制高度比例
-                                        child: SizedBox(
-                                          width: double.infinity,
-                                          height: 60,
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              4,
-                                            ), // 可选：圆角
-                                            child: MobileScanner(
-                                              controller: _scannerController,
-                                              fit: BoxFit.cover, // 填满整个区域
-                                              onDetect: _handleScan,
-                                            ),
-                                          ),
-                                        ),
+                                    Text(
+                                      'Consume Information',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-
-                                    // 新增：左上角閃光燈按鈕
-                                    Positioned(
-                                      top: 16.0,
-                                      left: 16.0,
-                                      child: CupertinoButton(
-                                        padding: const EdgeInsets.all(8.0),
-                                        color: CupertinoColors.black.withValues(
-                                          red: 0,
-                                          green: 0,
-                                          blue: 0,
-                                          alpha: 0.5,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                          20.0,
-                                        ),
-                                        onPressed:
-                                            () =>
-                                                _scannerController
-                                                    .toggleTorch(),
-                                        child: Icon(
-                                          CupertinoIcons.bolt_fill,
-                                          size: deviceSize.width * 0.06,
-                                          color: CupertinoColors.white,
-                                        ),
+                                    SizedBox(height: 12),
+                                    _buildInfoRow('User Id', p_user_id),
+                                    _buildInfoRow('Machine Id', p_machine_id),
+                                    _buildInfoRow('Old PR Id', p_old_pr_id),
+                                    _buildInfoRow('Old Tube Id', p_old_tube_id),
+                                    _buildInfoRow('New PR Id', p_new_pr_id),
+                                    _buildInfoRow('New Tube Id', p_new_tube_id),
+                                    // 你可以在这里添加更多表单内容或按钮
+                                    SizedBox(height: 24),
+                                    Center(
+                                      child: CupertinoButton.filled(
+                                        child: Text('Confirm'),
+                                        onPressed: () {
+                                          // TODO: 在这里处理确认逻辑
+                                        },
                                       ),
                                     ),
                                   ],
                                 ),
-                                // Container(
-                                //   //螢幕中的綠匡(全景掃描不需要)
-                                //   width: scanAreaSize,
-                                //   height: scanAreaSize * 0.8,
-                                //   decoration: BoxDecoration(
-                                //     border: Border.all(
-                                //         color: CupertinoColors.activeGreen, width: 2),
-                                //     borderRadius: BorderRadius.circular(12),
-                                //   ),
-                                // ),
-                              ],
-                            ),
-                          ),
+                              )
+                              : VisibilityDetector(
+                                key: _scannerVisibilityKey,
+                                onVisibilityChanged: (visibilityInfo) {
+                                  if (!mounted) return;
+                                  final visibleFraction =
+                                      visibilityInfo.visibleFraction;
+                                  debugPrint(
+                                    'Scanner visibility: ${visibleFraction * 100}%',
+                                  );
+
+                                  if (visibleFraction > 0) {
+                                    debugPrint(
+                                      'Scanner is visible, starting camera...',
+                                    );
+                                    _scannerController.start().catchError((
+                                      error,
+                                    ) {
+                                      debugPrint(
+                                        'Error starting camera: $error',
+                                      );
+                                    });
+                                  } else {
+                                    debugPrint(
+                                      'Scanner is not visible, stopping camera...',
+                                    );
+                                    _scannerController.stop();
+                                  }
+                                },
+
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        ClipRect(
+                                          // 使用ClipRect裁剪超出邊界部分
+                                          child: SizedBox(
+                                            width: deviceSize.width,
+                                            height:
+                                                deviceSize.height *
+                                                0.4, // 限制高度比例
+                                            child: SizedBox(
+                                              width: double.infinity,
+                                              height: 60,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                      4,
+                                                    ), // 可选：圆角
+                                                child: MobileScanner(
+                                                  controller:
+                                                      _scannerController,
+                                                  fit: BoxFit.cover, // 填满整个区域
+                                                  onDetect: _handleScan,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
+                                        // 新增：左上角閃光燈按鈕
+                                        Positioned(
+                                          top: 16.0,
+                                          left: 16.0,
+                                          child: CupertinoButton(
+                                            padding: const EdgeInsets.all(8.0),
+                                            color: CupertinoColors.black
+                                                .withValues(
+                                                  red: 0,
+                                                  green: 0,
+                                                  blue: 0,
+                                                  alpha: 0.5,
+                                                ),
+                                            borderRadius: BorderRadius.circular(
+                                              20.0,
+                                            ),
+                                            onPressed:
+                                                () =>
+                                                    _scannerController
+                                                        .toggleTorch(),
+                                            child: Icon(
+                                              CupertinoIcons.bolt_fill,
+                                              size: deviceSize.width * 0.06,
+                                              color: CupertinoColors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    // Container(
+                                    //   //螢幕中的綠匡(全景掃描不需要)
+                                    //   width: scanAreaSize,
+                                    //   height: scanAreaSize * 0.8,
+                                    //   decoration: BoxDecoration(
+                                    //     border: Border.all(
+                                    //         color: CupertinoColors.activeGreen, width: 2),
+                                    //     borderRadius: BorderRadius.circular(12),
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              ),
                           SizedBox(height: 16),
                         ],
                       ),
@@ -792,6 +850,36 @@ class _PageFun1State extends State<PageCunsume> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // 新增表单行构建方法
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 110,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: CupertinoColors.systemGrey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                color: CupertinoColors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
