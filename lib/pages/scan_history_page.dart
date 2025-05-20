@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:viscanner/widgets/scan_history_manager.dart';
+import 'package:prms/widgets/scan_history_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:viscanner/widgets/toast_util.dart';
+import 'package:prms/widgets/toast_util.dart';
 
 /// 掃描歷史頁面
 ///
@@ -60,15 +60,18 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
       if (_searchController.text.isEmpty) {
         _filteredScanHistory = _scanHistory;
       } else {
-        _filteredScanHistory = _scanHistory
-            .where((item) =>
-                item.content
-                    .toLowerCase()
-                    .contains(_searchController.text.toLowerCase()) ||
-                item.type
-                    .toLowerCase()
-                    .contains(_searchController.text.toLowerCase()))
-            .toList();
+        _filteredScanHistory =
+            _scanHistory
+                .where(
+                  (item) =>
+                      item.content.toLowerCase().contains(
+                        _searchController.text.toLowerCase(),
+                      ) ||
+                      item.type.toLowerCase().contains(
+                        _searchController.text.toLowerCase(),
+                      ),
+                )
+                .toList();
       }
     });
   }
@@ -76,9 +79,7 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        middle: Text('Scan History'),
-      ),
+      navigationBar: const CupertinoNavigationBar(middle: Text('Scan History')),
       child: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,15 +113,20 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
               ),
             ),
             Expanded(
-              child: _scanHistory.isEmpty
-                  ? _buildEmptyState()
-                  : ListView.builder(
-                      itemCount: _filteredScanHistory.length, // 使用過濾後的列表長度
-                      itemBuilder: (context, index) {
-                        final item = _filteredScanHistory[index]; // 使用過濾後的項目
-                        return _buildSwipeableHistoryItem(context, item, index);
-                      },
-                    ),
+              child:
+                  _scanHistory.isEmpty
+                      ? _buildEmptyState()
+                      : ListView.builder(
+                        itemCount: _filteredScanHistory.length, // 使用過濾後的列表長度
+                        itemBuilder: (context, index) {
+                          final item = _filteredScanHistory[index]; // 使用過濾後的項目
+                          return _buildSwipeableHistoryItem(
+                            context,
+                            item,
+                            index,
+                          );
+                        },
+                      ),
             ),
           ],
         ),
@@ -144,18 +150,12 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
           const SizedBox(height: 16),
           const Text(
             'No scan records yet',
-            style: TextStyle(
-              fontSize: 18,
-              color: CupertinoColors.systemGrey,
-            ),
+            style: TextStyle(fontSize: 18, color: CupertinoColors.systemGrey),
           ),
           const SizedBox(height: 8),
           const Text(
             'Start scanning to record history',
-            style: TextStyle(
-              fontSize: 16,
-              color: CupertinoColors.systemGrey,
-            ),
+            style: TextStyle(fontSize: 16, color: CupertinoColors.systemGrey),
           ),
         ],
       ),
@@ -168,7 +168,10 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
   /// [item] - 歷史記錄項
   /// [index] - 項目在列表中的索引
   Widget _buildSwipeableHistoryItem(
-      BuildContext context, ScanHistoryItem item, int index) {
+    BuildContext context,
+    ScanHistoryItem item,
+    int index,
+  ) {
     return Slidable(
       key: ValueKey('history_$index'),
       // 左側滑動操作區域
@@ -238,8 +241,9 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
           title: const Text('Confirm Delete'),
-          content:
-              const Text('Are you sure you want to delete this scan record?'),
+          content: const Text(
+            'Are you sure you want to delete this scan record?',
+          ),
           actions: [
             CupertinoDialogAction(
               child: const Text('Cancel'),
@@ -267,7 +271,10 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
   /// [item] - 歷史記錄項
   /// [index] - 項目在列表中的索引
   Widget _buildHistoryItem(
-      BuildContext context, ScanHistoryItem item, int index) {
+    BuildContext context,
+    ScanHistoryItem item,
+    int index,
+  ) {
     return CupertinoButton(
       padding: EdgeInsets.zero,
       onPressed: () {
@@ -332,52 +339,56 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
   /// [item] - 歷史記錄項
   /// [index] - 項目在列表中的索引
   void _showDetailsActionSheet(
-      BuildContext context, ScanHistoryItem item, int index) {
+    BuildContext context,
+    ScanHistoryItem item,
+    int index,
+  ) {
     showCupertinoModalPopup(
       context: context,
-      builder: (context) => CupertinoActionSheet(
-        title: const Text('Scan Details'),
-        message: Column(
-          children: [
-            const SizedBox(height: 12),
-            Text('Type: ${item.type}'),
-            const SizedBox(height: 8),
-            Text('Content: ${item.content}'),
-            const SizedBox(height: 8),
-            Text('Time: ${item.formattedDateTime}'),
-          ],
-        ),
-        actions: [
-          CupertinoActionSheetAction(
-            child: const Text('Copy Content'),
-            onPressed: () {
-              _copyToClipboard(item.content);
-              Navigator.pop(context);
-            },
+      builder:
+          (context) => CupertinoActionSheet(
+            title: const Text('Scan Details'),
+            message: Column(
+              children: [
+                const SizedBox(height: 12),
+                Text('Type: ${item.type}'),
+                const SizedBox(height: 8),
+                Text('Content: ${item.content}'),
+                const SizedBox(height: 8),
+                Text('Time: ${item.formattedDateTime}'),
+              ],
+            ),
+            actions: [
+              CupertinoActionSheetAction(
+                child: const Text('Copy Content'),
+                onPressed: () {
+                  _copyToClipboard(item.content);
+                  Navigator.pop(context);
+                },
+              ),
+              CupertinoActionSheetAction(
+                child: const Text('Resend'),
+                onPressed: () {
+                  Navigator.pop(context);
+                  _resendScanItem(item);
+                },
+              ),
+              CupertinoActionSheetAction(
+                isDestructiveAction: true,
+                onPressed: () {
+                  Navigator.pop(context);
+                  _deleteHistoryItem(index);
+                },
+                child: const Text('Delete'),
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
           ),
-          CupertinoActionSheetAction(
-            child: const Text('Resend'),
-            onPressed: () {
-              Navigator.pop(context);
-              _resendScanItem(item);
-            },
-          ),
-          CupertinoActionSheetAction(
-            isDestructiveAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-              _deleteHistoryItem(index);
-            },
-            child: const Text('Delete'),
-          ),
-        ],
-        cancelButton: CupertinoActionSheetAction(
-          child: const Text('Cancel'),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
     );
   }
 
@@ -391,7 +402,8 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
         return CupertinoAlertDialog(
           title: const Text('Confirm Clear All'),
           content: const Text(
-              'Are you sure you want to clear all scan records? This action cannot be undone.'),
+            'Are you sure you want to clear all scan records? This action cannot be undone.',
+          ),
           actions: [
             CupertinoDialogAction(
               child: const Text('Cancel'),

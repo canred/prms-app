@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
-import 'package:viscanner/pages/settings_page.dart';
-import 'package:viscanner/pages/home_page.dart';
+import 'package:prms/pages/settings_page.dart';
+import 'package:prms/pages/home_page.dart';
 import '../widgets/tab_bar.dart'; // 引入 CustomTabBar
 import 'scan_history_page.dart';
 import 'qr_scanner.dart';
-import 'package:viscanner/widgets/global_nav_bar.dart';
+import 'package:prms/widgets/global_nav_bar.dart';
 
 final GlobalKey<GlobalNavBarState> globalNavBarKey =
     GlobalKey<GlobalNavBarState>();

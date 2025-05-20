@@ -61,3 +61,5 @@ class GlobalNavBarState extends State<GlobalNavBar> {
     );
   }
 }
+
+// 检查是否有 PRMS 字样，若有则替换为 prms

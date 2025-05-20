@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:viscanner/services/mqtt_service.dart';
-import 'package:viscanner/pages/page_cumsume.dart';
+import 'package:prms/services/mqtt_service.dart';
+import 'package:prms/pages/page_cumsume.dart';
 
 class BindingPrmsCard extends StatefulWidget {
   const BindingPrmsCard({super.key});

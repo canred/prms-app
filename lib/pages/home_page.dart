@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
-import 'package:viscanner/pages/main_page.dart';
-import 'package:viscanner/services/mqtt_service.dart';
-import 'package:viscanner/widgets/binding_pc_card.dart';
-import 'package:viscanner/widgets/binding_prms_card.dart';
-import 'package:viscanner/widgets/keyboard_wizard_card.dart';
+import 'package:prms/pages/main_page.dart';
+import 'package:prms/services/mqtt_service.dart';
+import 'package:prms/widgets/binding_pc_card.dart';
+import 'package:prms/widgets/binding_prms_card.dart';
+import 'package:prms/widgets/keyboard_wizard_card.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -26,7 +26,7 @@ class HomePageState extends State<HomePage> {
     Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
       CupertinoPageRoute(
         builder:
-            (context) => MainPage(title: 'PRMS APP home', initialTabIndex: 1),
+            (context) => MainPage(title: 'prms APP home', initialTabIndex: 1),
       ),
       (route) => false, // 移除所有之前的路由
     );

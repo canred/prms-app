@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:viscanner/widgets/binding_prms_card.dart';
-import 'package:viscanner/widgets/global_nav_bar.dart';
-import 'package:viscanner/widgets/global_nav_bar_export.dart';
+import 'package:prms/widgets/binding_prms_card.dart';
+import 'package:prms/widgets/global_nav_bar.dart';
+import 'package:prms/widgets/global_nav_bar_export.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
 
@@ -29,7 +29,7 @@ class _PageFun1State extends State<PageCunsume> {
   // 分别为5个阶段的处理作业
   // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
   String page_stage =
-      "User "; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
+      "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
 
   @override
   void initState() {

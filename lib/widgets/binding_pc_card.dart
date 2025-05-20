@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:viscanner/services/mqtt_service.dart';
+import 'package:prms/services/mqtt_service.dart';
 
 class BindingPCCard extends StatefulWidget {
   final String selectedPC;

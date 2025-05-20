@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart'; // 引入services套件以設定系統UI樣式
-import 'package:viscanner/pages/main_page.dart';
+import 'package:prms/pages/main_page.dart';
 
 /// ViScanner應用程序主入口點
 void main() async {

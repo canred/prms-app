@@ -16,7 +16,7 @@ class MqttService {
     // 假資料，請稍後自行修改
     const String server = '10.125.1.104';
     const int port = 1883;
-    const String clientId = 'viscanner_client';
+    const String clientId = 'prms_client';
 
     client = MqttServerClient(server, clientId);
     client.port = port;
