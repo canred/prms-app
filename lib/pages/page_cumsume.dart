@@ -29,7 +29,14 @@ class _PageFun1State extends State<PageCunsume> {
   // 分别为5个阶段的处理作业
   // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
   String page_stage =
-      "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
+      "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube , Complete
+  //String p_user_id = "220653 / HHCHENX"; // 220653
+  String p_user_id = ""; // 220653
+  String p_machine_id = "";
+  String p_old_pr_id = "";
+  String p_old_tube_id = "";
+  String p_new_pr_id = "";
+  String p_new_tube_id = "";
 
   @override
   void initState() {
@@ -45,6 +52,19 @@ class _PageFun1State extends State<PageCunsume> {
   void _afterLoad() {
     // 通过 globalNavBarKey.currentState 调用 setTitle
     globalNavBarKey.currentState?.setTitle('PRMS APP pageFun1');
+  }
+
+  checkStage() {
+    if (p_user_id.isNotEmpty &&
+        p_machine_id.isNotEmpty &&
+        p_old_pr_id.isNotEmpty &&
+        p_old_tube_id.isNotEmpty &&
+        p_new_pr_id.isNotEmpty &&
+        p_new_tube_id.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   /// 處理掃描結果，支援單次與連續模式，並彈出對話框或更新畫面
@@ -68,6 +88,52 @@ class _PageFun1State extends State<PageCunsume> {
       if (barcode.rawValue != null) {
         final scanContent = barcode.rawValue!;
         debugPrint('掃描結果: $scanContent');
+        if (page_stage == "User") {
+          // 当符合 员工ID 的格式时，才会更新 p_user_id
+          // TODO: 這邊可以加入正規表達式判斷
+          setState(() {
+            p_user_id = scanContent;
+            page_stage = "Machine";
+          });
+        } else if (page_stage == "Machine") {
+          // 当符合 Machine ID 的格式时，才会更新 p_machine_id
+          // TODO: 這邊可以加入正規表達式判斷
+          setState(() {
+            p_machine_id = scanContent;
+            page_stage = "Old_PR";
+          });
+        } else if (page_stage == "Old_PR") {
+          // 当符合 Old PR ID 的格式时，才会更新 p_old_pr_id
+          // TODO: 這邊可以加入正規表達式判斷
+          setState(() {
+            p_old_pr_id = scanContent;
+            page_stage = "Old_Tube";
+          });
+        } else if (page_stage == "Old_Tube") {
+          // 当符合 Old Tube ID 的格式时，才会更新 p_old_pr_id
+          // TODO: 這邊可以加入正規表達式判斷
+          setState(() {
+            p_old_tube_id = scanContent;
+            page_stage = "New_PR";
+          });
+        } else if (page_stage == "New_PR") {
+          // 当符合 New PR ID 的格式时，才会更新 p_old_pr_id
+          // TODO: 這邊可以加入正規表達式判斷
+          setState(() {
+            p_new_pr_id = scanContent;
+            page_stage = "New_Tube";
+          });
+        } else if (page_stage == "New_Tube") {
+          // 当符合 New Tube ID 的格式时，才会更新 p_old_pr_id
+          // TODO: 這邊可以加入正規表達式判斷
+          setState(() {
+            p_new_tube_id = scanContent;
+            if (checkStage()) {
+              // 如果所有阶段都完成，显示对话框
+              page_stage = "Complete";
+            }
+          });
+        }
 
         // 在這裡可以根據需要處理掃描結果，例如顯示對話框或更新畫面
         // showDialog(
@@ -85,41 +151,6 @@ class _PageFun1State extends State<PageCunsume> {
         // );
       }
     }
-    // for (final barcode in barcodes.barcodes) {
-    //   if (barcode.rawValue != null) {
-    //     final scanContent = barcode.rawValue!;
-    //     final scanType = _determineScanType(scanContent);
-
-    //     debugPrint('識別掃描類型: $scanType');
-    //     debugPrint('嘗試添加掃描記錄: $scanContent');
-
-    //     try {
-    //       _historyManager.addScanRecord(scanContent, scanType);
-    //       debugPrint('掃描記錄已提交到 ScanHistoryManager');
-    //     } catch (e) {
-    //       debugPrint('添加掃描記錄時出錯: $e');
-    //     }
-
-    //     if (_isContinuousScanMode) {
-    //       setState(() {
-    //         _scanResult = scanContent;
-    //       });
-    //       ToastUtil.show(context, ' $scanContent');
-    //     } else {
-    //       // 單次掃描模式
-    //       if (mounted) {
-    //         // 確保 widget 仍然在樹中
-    //         _scannerController.stop(); // 在 setState 之前停止相機
-    //         setState(() {
-    //           _scanResult = scanContent;
-    //           _hasScanned = true;
-    //           debugPrint('UI已更新為顯示掃描結果');
-    //         });
-    //       }
-    //     }
-    //     break;
-    //   }
-    // }
   }
 
   @override
@@ -509,6 +540,23 @@ class _PageFun1State extends State<PageCunsume> {
                                         ),
                                       ],
                                     )
+                                    : page_stage == "Complete"
+                                    ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          CupertinoIcons
+                                              .check_mark_circled_solid,
+                                          size: 24,
+                                          color:
+                                              page_stage == "Complete"
+                                                  ? Color(0xFF1E90FF)
+                                                  : Color(
+                                                    0xFF1E90FF,
+                                                  ).withOpacity(0.7),
+                                        ),
+                                      ],
+                                    )
                                     : const Icon(
                                       CupertinoIcons.add_circled,
                                       size: 28,
@@ -528,6 +576,8 @@ class _PageFun1State extends State<PageCunsume> {
                                       ? 'Scan the barcode on the new PR Bottle.'
                                       : page_stage == "New_Tube"
                                       ? 'Scan the barcode on the tuble (pipeline).'
+                                      : page_stage == "Complete"
+                                      ? 'Complete,Bellow List to confirm.'
                                       : 'Scan Old ID',
                                   style: TextStyle(fontSize: 14),
                                 ),
@@ -657,8 +707,20 @@ class _PageFun1State extends State<PageCunsume> {
                           left: screenWidth * 0.1,
                           right: screenWidth * 0.1,
                         ),
-                        child: const Text(
-                          'User Id : 220653 \\ HHchenx',
+                        child: Text(
+                          page_stage == "User"
+                              ? 'User Id : ${p_user_id}'
+                              : page_stage == "Machine"
+                              ? 'Machine Id : ${p_machine_id}'
+                              : page_stage == "Old_PR"
+                              ? 'Old PR Id : ${p_old_pr_id}'
+                              : page_stage == "Old_Tube"
+                              ? 'Old Tube Id : ${p_old_tube_id}'
+                              : page_stage == "New_PR"
+                              ? 'New PR Id : ${p_new_pr_id}'
+                              : page_stage == "New_Tube"
+                              ? 'New Tube Id : ${p_new_tube_id}'
+                              : '',
                           style: TextStyle(
                             color: Color.fromARGB(255, 0, 0, 255),
                             fontSize: 18.0,
