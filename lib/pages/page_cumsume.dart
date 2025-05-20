@@ -38,6 +38,8 @@ class _PageFun1State extends State<PageCunsume> {
   String p_new_pr_id = "";
   String p_new_tube_id = "";
 
+  bool _isButtonPressed = false;
+
   @override
   void initState() {
     super.initState();
@@ -624,25 +626,98 @@ class _PageFun1State extends State<PageCunsume> {
                                     Text(
                                       'Consume Information',
                                       style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w900,
+                                        color: CupertinoColors.activeBlue,
+                                        letterSpacing: 1.2,
+                                        shadows: [
+                                          Shadow(
+                                            color: CupertinoColors.systemGrey.withOpacity(0.18),
+                                            offset: Offset(0, 2),
+                                            blurRadius: 4,
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    SizedBox(height: 12),
-                                    _buildInfoRow('User Id', p_user_id),
-                                    _buildInfoRow('Machine Id', p_machine_id),
-                                    _buildInfoRow('Old PR Id', p_old_pr_id),
-                                    _buildInfoRow('Old Tube Id', p_old_tube_id),
-                                    _buildInfoRow('New PR Id', p_new_pr_id),
-                                    _buildInfoRow('New Tube Id', p_new_tube_id),
-                                    // 你可以在这里添加更多表单内容或按钮
-                                    SizedBox(height: 24),
+                                    SizedBox(height: 18),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: CupertinoColors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: CupertinoColors.systemGrey4.withOpacity(0.12),
+                                            blurRadius: 8,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                        border: Border.all(
+                                          color: CupertinoColors.systemGrey4,
+                                          width: 0.7,
+                                        ),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          _buildInfoRowStyled('User Id', p_user_id, CupertinoIcons.person),
+                                          _buildDivider(),
+                                          _buildInfoRowStyled('Machine Id', p_machine_id, CupertinoIcons.gear_alt),
+                                          _buildDivider(),
+                                          _buildInfoRowStyled('Old PR Id', p_old_pr_id, CupertinoIcons.drop_fill, color: Color(0xFFB8860B)),
+                                          _buildDivider(),
+                                          _buildInfoRowStyled('Old Tube Id', p_old_tube_id, CupertinoIcons.arrow_merge, color: Color(0xFFB8860B)),
+                                          _buildDivider(),
+                                          _buildInfoRowStyled('New PR Id', p_new_pr_id, CupertinoIcons.drop_fill, color: Color(0xFF1E90FF)),
+                                          _buildDivider(),
+                                          _buildInfoRowStyled('New Tube Id', p_new_tube_id, CupertinoIcons.arrow_merge, color: Color(0xFF1E90FF)),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(height: 28),
                                     Center(
-                                      child: CupertinoButton.filled(
-                                        child: Text('Confirm'),
-                                        onPressed: () {
-                                          // TODO: 在这里处理确认逻辑
-                                        },
+                                      child: SizedBox(
+                                        width: 200,
+                                        child: GestureDetector(
+                                          onTapDown: (_) => setState(() => _isButtonPressed = true),
+                                          onTapUp: (_) => setState(() => _isButtonPressed = false),
+                                          onTapCancel: () => setState(() => _isButtonPressed = false),
+                                          onTap: () {
+                                            // TODO: 在这里处理确认逻辑
+                                          },
+                                          child: AnimatedScale(
+                                            scale: _isButtonPressed == true ? 0.96 : 1.0,
+                                            duration: Duration(milliseconds: 80),
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(vertical: 14),
+                                              decoration: BoxDecoration(
+                                                color: CupertinoColors.activeBlue,
+                                                borderRadius: BorderRadius.circular(10),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: CupertinoColors.systemGrey4.withOpacity(0.18),
+                                                    blurRadius: 8,
+                                                    offset: Offset(0, 2),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(CupertinoIcons.paperplane_fill, color: CupertinoColors.white, size: 32),
+                                                  SizedBox(width: 4),
+                                                  Text(
+                                                    'Confrim & Submit',
+                                                    style: TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: CupertinoColors.white,
+                                                      letterSpacing: 0.3,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -881,6 +956,51 @@ class _PageFun1State extends State<PageCunsume> {
           ),
         ],
       ),
+    );
+  }
+
+  // 專業iOS表單行（帶圖標與顏色）
+  Widget _buildInfoRowStyled(String label, String value, IconData icon, {Color? color}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+      child: Row(
+        children: [
+          Icon(icon, size: 22, color: color ?? CupertinoColors.systemGrey),
+          SizedBox(width: 10),
+          SizedBox(
+            width: 110,
+            child: Text(
+              label,
+              style: TextStyle(
+                color: CupertinoColors.systemGrey,
+                fontWeight: FontWeight.w500,
+                fontSize: 15,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: TextStyle(
+                color: CupertinoColors.label,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 專業iOS分隔線
+  Widget _buildDivider() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 12),
+      height: 1,
+      color: CupertinoColors.systemGrey5,
     );
   }
 }
