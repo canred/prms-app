@@ -30,14 +30,13 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
   final Key _scannerVisibilityKey = UniqueKey();
 
   // 分别为5个阶段的处理作业
-  // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
+  // User , Machine , New_PR, New_Tube
   String page_stage =
       "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube , Complete
   //String p_user_id = "220653 / HHCHENX"; // 220653
   String p_user_id = ""; // 220653
   String p_machine_id = "";
-  String p_old_pr_id = "";
-  String p_old_tube_id = "";
+
   String p_new_pr_id = "";
   String p_new_tube_id = "";
 
@@ -62,8 +61,6 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
   checkStage() {
     if (p_user_id.isNotEmpty &&
         p_machine_id.isNotEmpty &&
-        p_old_pr_id.isNotEmpty &&
-        p_old_tube_id.isNotEmpty &&
         p_new_pr_id.isNotEmpty &&
         p_new_tube_id.isNotEmpty) {
       return true;
@@ -109,24 +106,6 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
             setState(() {
               p_machine_id = scanContent;
               page_stage = "Old_PR";
-            });
-          }
-        } else if (page_stage == "Old_PR") {
-          // 当符合 Old PR ID 的格式时，才会更新 p_old_pr_id
-          // PR開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidPrId(scanContent)) {
-            setState(() {
-              p_old_pr_id = scanContent;
-              page_stage = "Old_Tube";
-            });
-          }
-        } else if (page_stage == "Old_Tube") {
-          // 当符合 Old Tube ID 的格式时，才会更新 p_old_pr_id
-          // TUBE開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidTubeId(scanContent)) {
-            setState(() {
-              p_old_tube_id = scanContent;
-              page_stage = "New_PR";
             });
           }
         } else if (page_stage == "New_PR") {
@@ -197,7 +176,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                   bottom: 4.0,
                                 ),
                                 child: Text(
-                                  'Flow Stage ( PR Consume ) :',
+                                  'Flow Stage ( Put On Flow} ) :',
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: CupertinoColors.systemGrey,
@@ -231,86 +210,6 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                     onTap: () {
                                       setState(() {
                                         page_stage = "Machine";
-                                      });
-                                    },
-                                    height: 56,
-                                  ),
-                                  _buildStageButton(
-                                    context,
-                                    iconWidget: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(
-                                                    0xFFB8860B,
-                                                  ) // 深金色/棕色，代表“旧”
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(0xFFB8860B) // 同上
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    ),
-                                    label: 'Old PR',
-                                    selected: page_stage == "Old_PR",
-                                    onTap: () {
-                                      setState(() {
-                                        page_stage = "Old_PR";
-                                      });
-                                    },
-                                    height: 56,
-                                  ),
-                                  _buildStageButton(
-                                    context,
-                                    iconWidget: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(
-                                                    0xFFB8860B,
-                                                  ) // 深金色/棕色，代表“旧”
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(0xFFB8860B) // 同上
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    ),
-                                    label: 'Old Tube',
-                                    selected: page_stage == "Old_Tube",
-                                    onTap: () {
-                                      setState(() {
-                                        page_stage = "Old_Tube";
                                       });
                                     },
                                     height: 56,
@@ -684,20 +583,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                             CupertinoIcons.gear_alt,
                                           ),
                                           _buildDivider(),
-                                          _buildInfoRowStyled(
-                                            'Old PR Id',
-                                            p_old_pr_id,
-                                            CupertinoIcons.drop_fill,
-                                            color: Color(0xFFB8860B),
-                                          ),
-                                          _buildDivider(),
-                                          _buildInfoRowStyled(
-                                            'Old Tube Id',
-                                            p_old_tube_id,
-                                            CupertinoIcons.arrow_merge,
-                                            color: Color(0xFFB8860B),
-                                          ),
-                                          _buildDivider(),
+
                                           _buildInfoRowStyled(
                                             'New PR Id',
                                             p_new_pr_id,
@@ -917,11 +803,6 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                               : page_stage == "Machine" &&
                                   p_machine_id.isNotEmpty
                               ? 'Machine Id : ${p_machine_id}'
-                              : page_stage == "Old_PR" && p_old_pr_id.isNotEmpty
-                              ? 'Old PR Id : ${p_old_pr_id}'
-                              : page_stage == "Old_Tube" &&
-                                  p_old_tube_id.isNotEmpty
-                              ? 'Old Tube Id : ${p_old_tube_id}'
                               : page_stage == "New_PR" && p_new_pr_id.isNotEmpty
                               ? 'New PR Id : ${p_new_pr_id}'
                               : page_stage == "New_Tube" &&

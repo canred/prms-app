@@ -30,16 +30,13 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
   final Key _scannerVisibilityKey = UniqueKey();
 
   // 分别为5个阶段的处理作业
-  // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
-  String page_stage =
-      "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube , Complete
+  // User , Machine , Old_PR , Old_Tube
+  String page_stage = "User"; // User , Machine , Old_PR , Old_Tube , Complete
   //String p_user_id = "220653 / HHCHENX"; // 220653
   String p_user_id = ""; // 220653
   String p_machine_id = "";
   String p_old_pr_id = "";
   String p_old_tube_id = "";
-  String p_new_pr_id = "";
-  String p_new_tube_id = "";
 
   bool _isButtonPressed = false;
 
@@ -63,9 +60,7 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
     if (p_user_id.isNotEmpty &&
         p_machine_id.isNotEmpty &&
         p_old_pr_id.isNotEmpty &&
-        p_old_tube_id.isNotEmpty &&
-        p_new_pr_id.isNotEmpty &&
-        p_new_tube_id.isNotEmpty) {
+        p_old_tube_id.isNotEmpty) {
       return true;
     } else {
       return false;
@@ -126,43 +121,10 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
           if (PrmsDataCheck.isValidTubeId(scanContent)) {
             setState(() {
               p_old_tube_id = scanContent;
-              page_stage = "New_PR";
-            });
-          }
-        } else if (page_stage == "New_PR") {
-          // 当符合 New PR ID 的格式时，才会更新 p_old_pr_id
-          // PR開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidPrId(scanContent)) {
-            setState(() {
-              p_new_pr_id = scanContent;
-              page_stage = "New_Tube";
-            });
-          }
-        } else if (page_stage == "New_Tube") {
-          // 当符合 New Tube ID 的格式时，才会更新 p_old_pr_id
-          // TUBE開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidTubeId(scanContent)) {
-            setState(() {
-              p_new_tube_id = scanContent;
-              page_stage = "Complete";
+              page_stage = "Old_Tube";
             });
           }
         }
-
-        // 在這裡可以根據需要處理掃描結果，例如顯示對話框或更新畫面
-        // showDialog(
-        //   context: context,
-        //   builder: (context) => CupertinoAlertDialog(
-        //     title: const Text('掃描結果'),
-        //     content: Text(scanContent),
-        //     actions: [
-        //       CupertinoDialogAction(
-        //         child: const Text('確定'),
-        //         onPressed: () => Navigator.of(context).pop(),
-        //       ),
-        //     ],
-        //   ),
-        // );
       }
     }
   }
@@ -197,7 +159,7 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
                                   bottom: 4.0,
                                 ),
                                 child: Text(
-                                  'Flow Stage ( PR Consume ) :',
+                                  'Flow Stage ( Take Off The Flow ) :',
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: CupertinoColors.systemGrey,
@@ -315,88 +277,6 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
                                     },
                                     height: 56,
                                   ),
-                                  _buildStageButton(
-                                    context,
-                                    iconWidget: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 16,
-                                          color:
-                                              page_stage == "New_PR"
-                                                  ? Color(
-                                                    0xFF1E90FF,
-                                                  ) // Dodger Blue，代表“新”
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "New_PR"
-                                                  ? Color(0xFF1E90FF) // 同上
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    ),
-                                    label: 'New PR',
-                                    selected: page_stage == "New_PR",
-                                    onTap: () {
-                                      setState(() {
-                                        page_stage = "New_PR";
-                                      });
-                                    },
-                                    height: 56,
-                                  ),
-                                  _buildStageButton(
-                                    context,
-                                    iconWidget: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      mainAxisSize:
-                                          MainAxisSize.min, // 修正按钮内容宽度
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 16,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(
-                                                    0xFF1E90FF,
-                                                  ) // Dodger Blue，代表“新”
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF) // 同上
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    ),
-                                    label: 'New Tube',
-                                    selected: page_stage == "New_Tube",
-                                    onTap: () {
-                                      setState(() {
-                                        page_stage = "New_Tube";
-                                      });
-                                    },
-                                    height: 56,
-                                  ),
                                 ],
                               ),
                             ],
@@ -500,60 +380,6 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
                                         ),
                                       ],
                                     )
-                                    : page_stage == "New_PR"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_PR"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_PR"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "New_Tube"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
                                     : page_stage == "Complete"
                                     ? Row(
                                       mainAxisSize: MainAxisSize.min,
@@ -586,13 +412,7 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
                                       ? 'Scan the barcode on the old PR Bottle.'
                                       : page_stage == "Old_Tube"
                                       ? 'Scan the barcode on the tuble (pipeline).'
-                                      : page_stage == "New_PR"
-                                      ? 'Scan the barcode on the new PR Bottle.'
-                                      : page_stage == "New_Tube"
-                                      ? 'Scan the barcode on the tuble (pipeline).'
-                                      : page_stage == "Complete"
-                                      ? 'Complete,Bellow List to confirm.'
-                                      : 'Scan Old ID',
+                                      : '',
                                   style: TextStyle(fontSize: 14),
                                 ),
                               ],
@@ -696,20 +516,6 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
                                             p_old_tube_id,
                                             CupertinoIcons.arrow_merge,
                                             color: Color(0xFFB8860B),
-                                          ),
-                                          _buildDivider(),
-                                          _buildInfoRowStyled(
-                                            'New PR Id',
-                                            p_new_pr_id,
-                                            CupertinoIcons.drop_fill,
-                                            color: Color(0xFF1E90FF),
-                                          ),
-                                          _buildDivider(),
-                                          _buildInfoRowStyled(
-                                            'New Tube Id',
-                                            p_new_tube_id,
-                                            CupertinoIcons.arrow_merge,
-                                            color: Color(0xFF1E90FF),
                                           ),
                                         ],
                                       ),
@@ -922,11 +728,6 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
                               : page_stage == "Old_Tube" &&
                                   p_old_tube_id.isNotEmpty
                               ? 'Old Tube Id : ${p_old_tube_id}'
-                              : page_stage == "New_PR" && p_new_pr_id.isNotEmpty
-                              ? 'New PR Id : ${p_new_pr_id}'
-                              : page_stage == "New_Tube" &&
-                                  p_new_tube_id.isNotEmpty
-                              ? 'New Tube Id : ${p_new_tube_id}'
                               : '',
                           style: TextStyle(
                             color: Color.fromARGB(255, 0, 0, 255),

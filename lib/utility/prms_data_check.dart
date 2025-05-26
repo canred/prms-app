@@ -25,4 +25,11 @@ class PrmsDataCheck {
     final reg = RegExp(r'^TUBE\d{6}$');
     return reg.hasMatch(input);
   }
+
+  static bool isVaildRackId(String input) {
+    // 假設Rack ID格式為R開頭+3位數字
+    // final reg = RegExp(r'^R\d{3}$');
+    // return reg.hasMatch(input);
+    return true;
+  }
 }

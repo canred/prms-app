@@ -8,6 +8,7 @@ import 'package:prms/widgets/global_nav_bar_export.dart';
 import 'package:prms/widgets/toast_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
+import 'package:flutter/material.dart';
 
 class PageMoveOutRack extends StatefulWidget {
   final GlobalKey<GlobalNavBarState>? navBarKey;
@@ -30,16 +31,13 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
   final Key _scannerVisibilityKey = UniqueKey();
 
   // 分别为5个阶段的处理作业
-  // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
+  // User , PR , Rack
   String page_stage =
       "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube , Complete
   //String p_user_id = "220653 / HHCHENX"; // 220653
-  String p_user_id = ""; // 220653
-  String p_machine_id = "";
-  String p_old_pr_id = "";
-  String p_old_tube_id = "";
-  String p_new_pr_id = "";
-  String p_new_tube_id = "";
+  String p_user_id = "";
+  List<String> p_pr = <String>[];
+  String p_rack_id = "";
 
   bool _isButtonPressed = false;
 
@@ -61,11 +59,9 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
 
   checkStage() {
     if (p_user_id.isNotEmpty &&
-        p_machine_id.isNotEmpty &&
-        p_old_pr_id.isNotEmpty &&
-        p_old_tube_id.isNotEmpty &&
-        p_new_pr_id.isNotEmpty &&
-        p_new_tube_id.isNotEmpty) {
+        p_pr.length > 0 &&
+        p_pr[0].trim().length > 0 &&
+        p_rack_id.isNotEmpty) {
       return true;
     } else {
       return false;
@@ -99,51 +95,23 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
           if (PrmsDataCheck.isValidUserId(scanContent)) {
             setState(() {
               p_user_id = scanContent;
-              page_stage = "Machine";
+              page_stage = "PR";
             });
           }
-        } else if (page_stage == "Machine") {
+        } else if (page_stage == "PR") {
           // 当符合 Machine ID 的格式时，才会更新 p_machine_id
           // 以M開頭+5位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidMachineId(scanContent)) {
+          if (PrmsDataCheck.isValidPrId(scanContent)) {
             setState(() {
-              p_machine_id = scanContent;
-              page_stage = "Old_PR";
+              p_pr.add(scanContent);
             });
           }
-        } else if (page_stage == "Old_PR") {
+        } else if (page_stage == "Rack") {
           // 当符合 Old PR ID 的格式时，才会更新 p_old_pr_id
           // PR開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidPrId(scanContent)) {
+          if (PrmsDataCheck.isVaildRackId(scanContent)) {
             setState(() {
-              p_old_pr_id = scanContent;
-              page_stage = "Old_Tube";
-            });
-          }
-        } else if (page_stage == "Old_Tube") {
-          // 当符合 Old Tube ID 的格式时，才会更新 p_old_pr_id
-          // TUBE開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidTubeId(scanContent)) {
-            setState(() {
-              p_old_tube_id = scanContent;
-              page_stage = "New_PR";
-            });
-          }
-        } else if (page_stage == "New_PR") {
-          // 当符合 New PR ID 的格式时，才会更新 p_old_pr_id
-          // PR開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidPrId(scanContent)) {
-            setState(() {
-              p_new_pr_id = scanContent;
-              page_stage = "New_Tube";
-            });
-          }
-        } else if (page_stage == "New_Tube") {
-          // 当符合 New Tube ID 的格式时，才会更新 p_old_pr_id
-          // TUBE開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidTubeId(scanContent)) {
-            setState(() {
-              p_new_tube_id = scanContent;
+              p_rack_id = scanContent;
               page_stage = "Complete";
             });
           }
@@ -197,7 +165,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                   bottom: 4.0,
                                 ),
                                 child: Text(
-                                  'Flow Stage ( PR Consume ) :',
+                                  'Flow Stage ( Move Out Rack ) :',
                                   style: TextStyle(
                                     fontSize: 13,
                                     color: CupertinoColors.systemGrey,
@@ -223,20 +191,6 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                   ),
                                   _buildStageButton(
                                     context,
-                                    icon:
-                                        CupertinoIcons
-                                            .gear_big, // 更贴合“机台/生产设备”的图标
-                                    label: 'Machine',
-                                    selected: page_stage == "Machine",
-                                    onTap: () {
-                                      setState(() {
-                                        page_stage = "Machine";
-                                      });
-                                    },
-                                    height: 56,
-                                  ),
-                                  _buildStageButton(
-                                    context,
                                     iconWidget: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
@@ -245,87 +199,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                           CupertinoIcons.drop_fill,
                                           size: 16,
                                           color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(
-                                                    0xFFB8860B,
-                                                  ) // 深金色/棕色，代表“旧”
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(0xFFB8860B) // 同上
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    ),
-                                    label: 'Old PR',
-                                    selected: page_stage == "Old_PR",
-                                    onTap: () {
-                                      setState(() {
-                                        page_stage = "Old_PR";
-                                      });
-                                    },
-                                    height: 56,
-                                  ),
-                                  _buildStageButton(
-                                    context,
-                                    iconWidget: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(
-                                                    0xFFB8860B,
-                                                  ) // 深金色/棕色，代表“旧”
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(0xFFB8860B) // 同上
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    ),
-                                    label: 'Old Tube',
-                                    selected: page_stage == "Old_Tube",
-                                    onTap: () {
-                                      setState(() {
-                                        page_stage = "Old_Tube";
-                                      });
-                                    },
-                                    height: 56,
-                                  ),
-                                  _buildStageButton(
-                                    context,
-                                    iconWidget: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 16,
-                                          color:
-                                              page_stage == "New_PR"
+                                              page_stage == "PR"
                                                   ? Color(
                                                     0xFF1E90FF,
                                                   ) // Dodger Blue，代表“新”
@@ -338,7 +212,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                           CupertinoIcons.barcode,
                                           size: 16,
                                           color:
-                                              page_stage == "New_PR"
+                                              page_stage == "PR"
                                                   ? Color(0xFF1E90FF) // 同上
                                                   : Color(
                                                     0xFF1E90FF,
@@ -346,11 +220,11 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                         ),
                                       ],
                                     ),
-                                    label: 'New PR',
-                                    selected: page_stage == "New_PR",
+                                    label: 'PR',
+                                    selected: page_stage == "PR",
                                     onTap: () {
                                       setState(() {
-                                        page_stage = "New_PR";
+                                        page_stage = "PR";
                                       });
                                     },
                                     height: 56,
@@ -360,27 +234,12 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                     iconWidget: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      mainAxisSize:
-                                          MainAxisSize.min, // 修正按钮内容宽度
                                       children: [
                                         Icon(
-                                          CupertinoIcons.arrow_merge,
+                                          Icons.inventory_2,
                                           size: 16,
                                           color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(
-                                                    0xFF1E90FF,
-                                                  ) // Dodger Blue，代表“新”
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "New_Tube"
+                                              page_stage == "Rack"
                                                   ? Color(0xFF1E90FF) // 同上
                                                   : Color(
                                                     0xFF1E90FF,
@@ -388,11 +247,11 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                         ),
                                       ],
                                     ),
-                                    label: 'New Tube',
-                                    selected: page_stage == "New_Tube",
+                                    label: 'Rack',
+                                    selected: page_stage == "Rack",
                                     onTap: () {
                                       setState(() {
-                                        page_stage = "New_Tube";
+                                        page_stage = "Rack";
                                       });
                                     },
                                     height: 56,
@@ -446,7 +305,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                       size: 28,
                                       color: CupertinoColors.activeBlue,
                                     )
-                                    : page_stage == "Old_PR"
+                                    : page_stage == "PR"
                                     ? Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
@@ -454,61 +313,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                           CupertinoIcons.drop_fill,
                                           size: 24,
                                           color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(0xFFB8860B)
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(0xFFB8860B)
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "Old_Tube"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(0xFFB8860B)
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(0xFFB8860B)
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "New_PR"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_PR"
+                                              page_stage == "PR"
                                                   ? Color(0xFF1E90FF)
                                                   : Color(
                                                     0xFF1E90FF,
@@ -519,7 +324,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                           CupertinoIcons.barcode,
                                           size: 24,
                                           color:
-                                              page_stage == "New_PR"
+                                              page_stage == "PR"
                                                   ? Color(0xFF1E90FF)
                                                   : Color(
                                                     0xFF1E90FF,
@@ -527,23 +332,12 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                         ),
                                       ],
                                     )
-                                    : page_stage == "New_Tube"
+                                    : page_stage == "Rack"
                                     ? Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
+                                          Icons.inventory_2,
                                           size: 24,
                                           color:
                                               page_stage == "New_Tube"
@@ -580,19 +374,11 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                 Text(
                                   page_stage == "User"
                                       ? 'Scan the barcode on your employee ID card.'
-                                      : page_stage == "Machine"
-                                      ? 'Scan the barcode on the machine.'
-                                      : page_stage == "Old_PR"
-                                      ? 'Scan the barcode on the old PR Bottle.'
-                                      : page_stage == "Old_Tube"
-                                      ? 'Scan the barcode on the tuble (pipeline).'
-                                      : page_stage == "New_PR"
-                                      ? 'Scan the barcode on the new PR Bottle.'
-                                      : page_stage == "New_Tube"
-                                      ? 'Scan the barcode on the tuble (pipeline).'
-                                      : page_stage == "Complete"
-                                      ? 'Complete,Bellow List to confirm.'
-                                      : 'Scan Old ID',
+                                      : page_stage == "PR"
+                                      ? 'Scan the barcode on the PR Bottle.'
+                                      : page_stage == "Rack"
+                                      ? 'Scan the barcode on the Rack.'
+                                      : '',
                                   style: TextStyle(fontSize: 14),
                                 ),
                               ],
@@ -679,36 +465,16 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                           ),
                                           _buildDivider(),
                                           _buildInfoRowStyled(
-                                            'Machine Id',
-                                            p_machine_id,
+                                            'PR',
+                                            p_pr.join(', '),
                                             CupertinoIcons.gear_alt,
                                           ),
                                           _buildDivider(),
+
                                           _buildInfoRowStyled(
-                                            'Old PR Id',
-                                            p_old_pr_id,
+                                            'Rack Id',
+                                            p_rack_id,
                                             CupertinoIcons.drop_fill,
-                                            color: Color(0xFFB8860B),
-                                          ),
-                                          _buildDivider(),
-                                          _buildInfoRowStyled(
-                                            'Old Tube Id',
-                                            p_old_tube_id,
-                                            CupertinoIcons.arrow_merge,
-                                            color: Color(0xFFB8860B),
-                                          ),
-                                          _buildDivider(),
-                                          _buildInfoRowStyled(
-                                            'New PR Id',
-                                            p_new_pr_id,
-                                            CupertinoIcons.drop_fill,
-                                            color: Color(0xFF1E90FF),
-                                          ),
-                                          _buildDivider(),
-                                          _buildInfoRowStyled(
-                                            'New Tube Id',
-                                            p_new_tube_id,
-                                            CupertinoIcons.arrow_merge,
                                             color: Color(0xFF1E90FF),
                                           ),
                                         ],
@@ -914,19 +680,10 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                         child: Text(
                           page_stage == "User" && p_user_id.isNotEmpty
                               ? 'User Id : ${p_user_id}'
-                              : page_stage == "Machine" &&
-                                  p_machine_id.isNotEmpty
-                              ? 'Machine Id : ${p_machine_id}'
-                              : page_stage == "Old_PR" && p_old_pr_id.isNotEmpty
-                              ? 'Old PR Id : ${p_old_pr_id}'
-                              : page_stage == "Old_Tube" &&
-                                  p_old_tube_id.isNotEmpty
-                              ? 'Old Tube Id : ${p_old_tube_id}'
-                              : page_stage == "New_PR" && p_new_pr_id.isNotEmpty
-                              ? 'New PR Id : ${p_new_pr_id}'
-                              : page_stage == "New_Tube" &&
-                                  p_new_tube_id.isNotEmpty
-                              ? 'New Tube Id : ${p_new_tube_id}'
+                              : page_stage == "PR" && p_pr.length > 0
+                              ? 'PR : ${p_pr.join(', ')}'
+                              : page_stage == "Rack" && p_rack_id.isNotEmpty
+                              ? 'Rack : ${p_rack_id}'
                               : '',
                           style: TextStyle(
                             color: Color.fromARGB(255, 0, 0, 255),
