@@ -1,6 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:prms/services/mqtt_service.dart';
 import 'package:prms/pages/page_cumsume.dart';
+import 'package:prms/pages/page_move_in_rack.dart';
+import 'package:prms/pages/page_move_out_rack.dart';
+import 'package:prms/pages/page_put_on_flow.dart';
+import 'package:prms/pages/page_take_off_flow.dart';
+import 'package:prms/pages/page_clean_flow.dart';
 
 class BindingPrmsCard extends StatefulWidget {
   const BindingPrmsCard({super.key});
@@ -62,7 +67,11 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                   icon: CupertinoIcons.tray_arrow_down, // 更贴合“放进柜子”功能的图标
                   label: 'Move In Rack',
                   onPressed: () {
-                    print('Button 2 clicked');
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => const PageMoveInRack(),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(height: 6),
@@ -72,7 +81,11 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                   icon: CupertinoIcons.tray_arrow_up, // 更贴合“从柜子取出”功能的图标
                   label: 'Move Out Rack',
                   onPressed: () {
-                    print('Button 3 clicked');
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => const PageMoveOutRack(),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(height: 6),
@@ -85,7 +98,11 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                   ], // 上传+机台
                   label: 'Put On Flow',
                   onPressed: () {
-                    print('Button 4 clicked');
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => const PagePutOnFlow(),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(height: 6),
@@ -95,7 +112,11 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                   icons: [CupertinoIcons.arrow_down, CupertinoIcons.gear],
                   label: 'Take Off Flow',
                   onPressed: () {
-                    print('Button 5 clicked');
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => const PageTakeOffFlow(),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(height: 6),
@@ -105,7 +126,11 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                   icon: CupertinoIcons.refresh_circled, // 更贴合“清除/重置”用途的图标
                   label: 'Clean Flow',
                   onPressed: () {
-                    print('Button 6 clicked');
+                    Navigator.of(context).push(
+                      CupertinoPageRoute(
+                        builder: (context) => const PageCleanFlow(),
+                      ),
+                    );
                   },
                 ),
                 SizedBox(height: 6),
