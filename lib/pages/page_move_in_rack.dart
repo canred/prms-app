@@ -704,6 +704,17 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
     );
   }
 
+  @override
+  void dispose() {
+    try {
+      _scannerController.stop();
+    } catch (e) {
+      debugPrint('Error stopping camera: $e');
+    }
+    _scannerController.dispose();
+    super.dispose();
+  }
+
   // 新增iOS风格按钮构建方法
   Widget _buildStageButton(
     BuildContext context, {

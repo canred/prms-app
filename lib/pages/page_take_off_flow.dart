@@ -883,4 +883,15 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
       color: CupertinoColors.systemGrey5,
     );
   }
+
+  @override
+  void dispose() {
+    try {
+      _scannerController.stop();
+    } catch (e) {
+      debugPrint('Error stopping camera: $e');
+    }
+    _scannerController.dispose();
+    super.dispose();
+  }
 }
