@@ -19,7 +19,14 @@ class SettingsForm extends StatefulWidget {
 }
 
 class _SettingsFormState extends State<SettingsForm> {
-  bool airplaneMode = false;
+  bool darkMode = false; // 原airplaneMode更名为darkMode
+  final TextEditingController _textController = TextEditingController(text: 'Enter'); // 避免重建controller
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +49,10 @@ class _SettingsFormState extends State<SettingsForm> {
                 color: CupertinoColors.systemOrange,
               ),
               child: CupertinoSwitch(
-                value: airplaneMode,
+                value: darkMode,
                 onChanged: (bool value) {
                   setState(() {
-                    airplaneMode = value;
+                    darkMode = value;
                   });
                 },
               ),
@@ -59,8 +66,7 @@ class _SettingsFormState extends State<SettingsForm> {
               child: CupertinoButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  // 在這裡添加按鈕點擊事件處理邏輯
-                  //print('QR Code Button Pressed');
+                  // TODO: 添加设备绑定逻辑
                 },
                 child: const Icon(
                   CupertinoIcons.qrcode,
@@ -94,8 +100,7 @@ class _SettingsFormState extends State<SettingsForm> {
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: CupertinoTextField(
                   placeholder: 'Enter text',
-                  //預設填入文字ABC
-                  controller: TextEditingController(text: 'Enter'),
+                  controller: _textController, // 使用持久controller
                 ),
               ),
               child: const Row(

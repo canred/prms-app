@@ -715,25 +715,7 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
                           left: screenWidth * 0.1,
                           right: screenWidth * 0.1,
                         ),
-                        child: Text(
-                          page_stage == "User" && p_user_id.isNotEmpty
-                              ? 'User Id : $p_user_id'
-                              : page_stage == "Machine" &&
-                                  p_machine_id.isNotEmpty
-                              ? 'Machine Id : $p_machine_id'
-                              : page_stage == "Old_PR" && p_old_pr_id.isNotEmpty
-                              ? 'Old PR Id : $p_old_pr_id'
-                              : page_stage == "Old_Tube" &&
-                                  p_old_tube_id.isNotEmpty
-                              ? 'Old Tube Id : $p_old_tube_id'
-                              : '',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 255),
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: _buildBottomInfo(),
                       ),
                     ),
                   ),
@@ -851,6 +833,30 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
       margin: EdgeInsets.symmetric(horizontal: 12),
       height: 1,
       color: CupertinoColors.systemGrey5,
+    );
+  }
+
+  // 优化底部信息显示，减少重复判断
+  Widget _buildBottomInfo() {
+    String info = '';
+    if (page_stage == "User" && p_user_id.isNotEmpty) {
+      info = 'User Id : ' + p_user_id;
+    } else if (page_stage == "Machine" && p_machine_id.isNotEmpty) {
+      info = 'Machine Id : ' + p_machine_id;
+    } else if (page_stage == "Old_PR" && p_old_pr_id.isNotEmpty) {
+      info = 'Old PR Id : ' + p_old_pr_id;
+    } else if (page_stage == "Old_Tube" && p_old_tube_id.isNotEmpty) {
+      info = 'Old Tube Id : ' + p_old_tube_id;
+    }
+    if (info.isEmpty) return const SizedBox.shrink();
+    return Text(
+      info,
+      style: const TextStyle(
+        color: Color.fromARGB(255, 0, 0, 255),
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+      ),
+      textAlign: TextAlign.center,
     );
   }
 

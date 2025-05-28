@@ -795,25 +795,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                           left: screenWidth * 0.1,
                           right: screenWidth * 0.1,
                         ),
-                        child: Text(
-                          page_stage == "User" && p_user_id.isNotEmpty
-                              ? 'User Id : $p_user_id'
-                              : page_stage == "Machine" &&
-                                  p_machine_id.isNotEmpty
-                              ? 'Machine Id : $p_machine_id'
-                              : page_stage == "New_PR" && p_new_pr_id.isNotEmpty
-                              ? 'New PR Id : $p_new_pr_id'
-                              : page_stage == "New_Tube" &&
-                                  p_new_tube_id.isNotEmpty
-                              ? 'New Tube Id : $p_new_tube_id'
-                              : '',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 255),
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: _buildBottomInfo(),
                       ),
                     ),
                   ),
@@ -942,6 +924,30 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
       margin: EdgeInsets.symmetric(horizontal: 12),
       height: 1,
       color: CupertinoColors.systemGrey5,
+    );
+  }
+
+  // 优化底部信息显示，减少重复判断
+  Widget _buildBottomInfo() {
+    String info = '';
+    if (page_stage == "User" && p_user_id.isNotEmpty) {
+      info = 'User Id : ' + p_user_id;
+    } else if (page_stage == "Machine" && p_machine_id.isNotEmpty) {
+      info = 'Machine Id : ' + p_machine_id;
+    } else if (page_stage == "New_PR" && p_new_pr_id.isNotEmpty) {
+      info = 'New PR Id : ' + p_new_pr_id;
+    } else if (page_stage == "New_Tube" && p_new_tube_id.isNotEmpty) {
+      info = 'New Tube Id : ' + p_new_tube_id;
+    }
+    if (info.isEmpty) return const SizedBox.shrink();
+    return Text(
+      info,
+      style: const TextStyle(
+        color: Color.fromARGB(255, 0, 0, 255),
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }

@@ -633,21 +633,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                           left: screenWidth * 0.1,
                           right: screenWidth * 0.1,
                         ),
-                        child: Text(
-                          page_stage == "User" && p_user_id.isNotEmpty
-                              ? 'User Id : $p_user_id'
-                              : page_stage == "PR" && p_pr.isNotEmpty
-                              ? 'PR : ${p_pr.join(', ')}'
-                              : page_stage == "Rack" && p_rack_id.isNotEmpty
-                              ? 'Rack : $p_rack_id'
-                              : '',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 255),
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: _buildBottomInfo(),
                       ),
                     ),
                   ),
@@ -777,6 +763,28 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
       margin: EdgeInsets.symmetric(horizontal: 12),
       height: 1,
       color: CupertinoColors.systemGrey5,
+    );
+  }
+
+  // 优化底部信息显示，减少重复判断
+  Widget _buildBottomInfo() {
+    String info = '';
+    if (page_stage == "User" && p_user_id.isNotEmpty) {
+      info = 'User Id : ' + p_user_id;
+    } else if (page_stage == "PR" && p_pr.isNotEmpty) {
+      info = 'PR : ' + p_pr.join(', ');
+    } else if (page_stage == "Rack" && p_rack_id.isNotEmpty) {
+      info = 'Rack : ' + p_rack_id;
+    }
+    if (info.isEmpty) return const SizedBox.shrink();
+    return Text(
+      info,
+      style: const TextStyle(
+        color: Color.fromARGB(255, 0, 0, 255),
+        fontSize: 18.0,
+        fontWeight: FontWeight.bold,
+      ),
+      textAlign: TextAlign.center,
     );
   }
 }
