@@ -1,10 +1,6 @@
 import 'package:flutter/cupertino.dart';
-import 'package:prms/pages/main_page.dart';
 import 'package:prms/services/mqtt_service.dart';
-import 'package:prms/widgets/binding_pc_card.dart';
 import 'package:prms/widgets/binding_prms_card.dart';
-import 'package:prms/widgets/keyboard_wizard_card.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -18,18 +14,6 @@ class HomePageState extends State<HomePage> {
     super.initState();
     // APP畫面顯示後再進行MQTT連線
     MqttService().connect();
-  }
-
-  // 開啟QR掃描頁面 - 直接切換到 TabBar 的 Scan 頁籤
-  void _navigateToQRScanTab() {
-    // 使用 Navigator 跳轉到主頁面，同時傳遞參數指示應該顯示 QRscanTab
-    Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-      CupertinoPageRoute(
-        builder:
-            (context) => MainPage(title: 'prms APP home', initialTabIndex: 1),
-      ),
-      (route) => false, // 移除所有之前的路由
-    );
   }
 
   @override

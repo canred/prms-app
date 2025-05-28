@@ -1,11 +1,10 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:prms/main.dart';
+
 import 'package:prms/utility/prms_data_check.dart';
-import 'package:prms/widgets/binding_prms_card.dart';
 import 'package:prms/widgets/global_nav_bar.dart';
-import 'package:prms/widgets/global_nav_bar_export.dart';
-import 'package:prms/widgets/toast_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
 import 'package:flutter/material.dart';
@@ -59,8 +58,7 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
 
   checkStage() {
     if (p_user_id.isNotEmpty &&
-        p_pr.length > 0 &&
-        p_pr[0].trim().length > 0 &&
+        p_pr[0].trim().isNotEmpty &&
         p_rack_id.isNotEmpty) {
       return true;
     } else {
@@ -679,11 +677,11 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                         ),
                         child: Text(
                           page_stage == "User" && p_user_id.isNotEmpty
-                              ? 'User Id : ${p_user_id}'
-                              : page_stage == "PR" && p_pr.length > 0
+                              ? 'User Id : $p_user_id'
+                              : page_stage == "PR" && p_pr.isNotEmpty
                               ? 'PR : ${p_pr.join(', ')}'
                               : page_stage == "Rack" && p_rack_id.isNotEmpty
-                              ? 'Rack : ${p_rack_id}'
+                              ? 'Rack : $p_rack_id'
                               : '',
                           style: TextStyle(
                             color: Color.fromARGB(255, 0, 0, 255),
@@ -771,35 +769,7 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
     );
   }
 
-  // 新增表单行构建方法
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 110,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: CupertinoColors.systemGrey,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                color: CupertinoColors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  
 
   // 專業iOS表單行（帶圖標與顏色）
   Widget _buildInfoRowStyled(

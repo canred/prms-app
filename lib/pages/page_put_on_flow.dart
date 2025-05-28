@@ -1,11 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:prms/main.dart';
 import 'package:prms/utility/prms_data_check.dart';
-import 'package:prms/widgets/binding_prms_card.dart';
 import 'package:prms/widgets/global_nav_bar.dart';
-import 'package:prms/widgets/global_nav_bar_export.dart';
-import 'package:prms/widgets/toast_util.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
 
@@ -799,15 +797,15 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                         ),
                         child: Text(
                           page_stage == "User" && p_user_id.isNotEmpty
-                              ? 'User Id : ${p_user_id}'
+                              ? 'User Id : $p_user_id'
                               : page_stage == "Machine" &&
                                   p_machine_id.isNotEmpty
-                              ? 'Machine Id : ${p_machine_id}'
+                              ? 'Machine Id : $p_machine_id'
                               : page_stage == "New_PR" && p_new_pr_id.isNotEmpty
-                              ? 'New PR Id : ${p_new_pr_id}'
+                              ? 'New PR Id : $p_new_pr_id'
                               : page_stage == "New_Tube" &&
                                   p_new_tube_id.isNotEmpty
-                              ? 'New Tube Id : ${p_new_tube_id}'
+                              ? 'New Tube Id : $p_new_tube_id'
                               : '',
                           style: TextStyle(
                             color: Color.fromARGB(255, 0, 0, 255),
@@ -895,35 +893,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
     );
   }
 
-  // 新增表单行构建方法
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 110,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: CupertinoColors.systemGrey,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: TextStyle(
-                color: CupertinoColors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  
 
   // 專業iOS表單行（帶圖標與顏色）
   Widget _buildInfoRowStyled(

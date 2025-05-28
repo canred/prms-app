@@ -1,5 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/cupertino.dart';
-import 'package:prms/services/mqtt_service.dart';
 import 'package:prms/pages/page_cumsume.dart';
 import 'package:prms/pages/page_move_in_rack.dart';
 import 'package:prms/pages/page_move_out_rack.dart';

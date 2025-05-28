@@ -1,5 +1,6 @@
 /// PRMS 資料格式檢查工具
 /// 集中管理所有資料格式驗證，方便維護與擴充。
+library;
 
 class PrmsDataCheck {
   /// 檢查員工ID（6位數字）

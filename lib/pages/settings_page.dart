@@ -60,7 +60,7 @@ class _SettingsFormState extends State<SettingsForm> {
                 padding: EdgeInsets.zero,
                 onPressed: () {
                   // 在這裡添加按鈕點擊事件處理邏輯
-                  print('QR Code Button Pressed');
+                  //print('QR Code Button Pressed');
                 },
                 child: const Icon(
                   CupertinoIcons.qrcode,

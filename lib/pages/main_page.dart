@@ -16,7 +16,7 @@ class MainPage extends StatefulWidget {
 
   //late GlobalNavBar _GlobalNavBar;
 
-  MainPage({
+  const MainPage({
     required this.title,
     this.initialTabIndex = 0, // 預設為首頁(索引0)
     super.key,

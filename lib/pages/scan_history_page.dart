@@ -430,6 +430,7 @@ class _ScanHistoryPageState extends State<ScanHistoryPage> {
   /// [text] - 要複製的文字
   void _copyToClipboard(String text) {
     Clipboard.setData(ClipboardData(text: text)).then((_) {
+      if (!mounted) return;
       // Show success toast
       ToastUtil.show(context, 'Copied to clipboard');
     });
