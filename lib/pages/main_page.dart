@@ -3,7 +3,7 @@ import 'package:prms/pages/settings_page.dart';
 import 'package:prms/pages/home_page.dart';
 import '../widgets/tab_bar.dart'; // 引入 CustomTabBar
 import 'scan_history_page.dart';
-import 'qr_scanner.dart';
+import 'page_setting.dart';
 import 'package:prms/widgets/global_nav_bar.dart';
 
 final GlobalKey<GlobalNavBarState> globalNavBarKey =
@@ -56,7 +56,7 @@ class _PartsPageState extends State<MainPage> {
                 case 0:
                   return const HomePage();
                 case 1:
-                  return const QRscanTab();
+                  return const SettingTab();
                 case 2:
                   return const ScanHistoryPage();
                 case 3:

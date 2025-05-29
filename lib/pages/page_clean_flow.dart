@@ -156,16 +156,34 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  left: 4.0,
-                                  bottom: 4.0,
-                                ),
-                                child: Text(
-                                  'Flow Stage ( Move In Rack ) :',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: CupertinoColors.systemGrey,
-                                    fontWeight: FontWeight.w600,
+                                padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: CupertinoColors.systemGrey6,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 3,
+                                        height: 22,
+                                        decoration: BoxDecoration(
+                                          color: CupertinoColors.systemGrey3,
+                                          borderRadius: BorderRadius.circular(2),
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Flow Stage ( Clean Flow )',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: CupertinoColors.activeBlue,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -226,7 +244,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                             ),
                             child: LayoutBuilder(
                               builder: (context, constraints) {
-                                final dashWidth = 1.5; // 更细腻
+                                final dashWidth = 1.2; // 更细腻
                                 final dashSpace = 2.0; // 间距更小
                                 final dashCount =
                                     (constraints.maxWidth /
@@ -239,7 +257,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                     return Container(
                                       width: dashWidth,
                                       height: 1,
-                                      color: const Color(0xFF888888), // 深一点的灰色
+                                      color: const Color(0xFFCCCCCC), // 更浅的灰色
                                     );
                                   }),
                                 );
@@ -247,95 +265,107 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                             ),
                           ),
                           const SizedBox(height: 8),
+                          // 当前阶段提示区域优化
                           Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(
+                              left: 10.0,
+                              right: 10.0,
+                            ),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                page_stage == "User"
-                                    ? const Icon(
-                                      CupertinoIcons.person,
-                                      size: 28,
-                                      color: CupertinoColors.activeBlue,
-                                    )
-                                    : page_stage == "Machine"
-                                    ? const Icon(
-                                      CupertinoIcons.gear_alt, // 设备图标
-                                      size: 28,
-                                      color: CupertinoColors.activeBlue,
-                                    )
-                                    : page_stage == "PR"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 24,
-                                          color:
-                                              page_stage == "PR"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // 阶段图标
+                                      page_stage == "User"
+                                          ? const Icon(
+                                            CupertinoIcons.person,
+                                            size: 32,
+                                            color: CupertinoColors.activeBlue,
+                                          )
+                                          : page_stage == "Machine"
+                                          ? const Icon(
+                                            CupertinoIcons.gear_alt,
+                                            size: 32,
+                                            color: CupertinoColors.activeBlue,
+                                          )
+                                          : page_stage == "PR"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons.drop_fill,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                              SizedBox(width: 2),
+                                              Icon(
+                                                CupertinoIcons.barcode,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                            ],
+                                          )
+                                          : page_stage == "Rack"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                Icons.inventory_2,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                            ],
+                                          )
+                                          : page_stage == "Complete"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons
+                                                    .check_mark_circled_solid,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                            ],
+                                          )
+                                          : const Icon(
+                                            CupertinoIcons.add_circled,
+                                            size: 32,
+                                            color: CupertinoColors.activeBlue,
+                                          ),
+                                      SizedBox(width: 10),
+                                      // 阶段提示语
+                                      Flexible(
+                                        child: Text(
+                                          page_stage == "User"
+                                              ? 'Scan the barcode on your employee ID card.'
+                                              : page_stage == "Machine"
+                                              ? 'Scan the barcode on the Machine.'
+                                              : page_stage == "PR"
+                                              ? 'Scan the barcode on the PR.'
+                                              : page_stage == "Rack"
+                                              ? 'Scan the barcode on the Rack.'
+                                              : page_stage == "Complete"
+                                              ? 'Complete, Below List to confirm.'
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            color: CupertinoColors.activeBlue,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "PR"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "Rack"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          Icons.inventory_2,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "Complete"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons
-                                              .check_mark_circled_solid,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Complete"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : const Icon(
-                                      CupertinoIcons.add_circled,
-                                      size: 28,
-                                      color: CupertinoColors.activeBlue,
-                                    ),
-                                SizedBox(width: 4),
-                                Text(
-                                  page_stage == "User"
-                                      ? 'Scan the barcode on your employee ID card.'
-                                      : page_stage == "Machine"
-                                      ? 'Scan the barcode on the Machine.'
-                                      : '',
-                                  style: TextStyle(fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -523,9 +553,8 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                   final visibleFraction =
                                       visibilityInfo.visibleFraction;
                                   debugPrint(
-                                    'Scanner visibility: ${visibleFraction * 100}%',
+                                    'Scanner visibility: \\${visibleFraction * 100}%',
                                   );
-
                                   if (visibleFraction > 0) {
                                     debugPrint(
                                       'Scanner is visible, starting camera...',
@@ -534,7 +563,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                       error,
                                     ) {
                                       debugPrint(
-                                        'Error starting camera: $error',
+                                        'Error starting camera: \\${error}',
                                       );
                                     });
                                   } else {
@@ -544,51 +573,50 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                     _scannerController.stop();
                                   }
                                 },
-
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Stack(
+                                child: Center(
+                                  child: Container(
+                                    width: deviceSize.width * 0.85,
+                                    height: deviceSize.height * 0.36,
+                                    decoration: BoxDecoration(
+                                      color: CupertinoColors.systemGrey6
+                                          .withOpacity(0.85),
+                                      borderRadius: BorderRadius.circular(20),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: CupertinoColors.systemGrey4
+                                              .withOpacity(0.18),
+                                          blurRadius: 16,
+                                          offset: Offset(0, 6),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Stack(
+                                      alignment: Alignment.center,
                                       children: [
-                                        ClipRect(
-                                          // 使用ClipRect裁剪超出邊界部分
-                                          child: SizedBox(
-                                            width: deviceSize.width,
-                                            height:
-                                                deviceSize.height *
-                                                0.4, // 限制高度比例
-                                            child: SizedBox(
-                                              width: double.infinity,
-                                              height: 60,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      4,
-                                                    ), // 可选：圆角
-                                                child: MobileScanner(
-                                                  controller:
-                                                      _scannerController,
-                                                  fit: BoxFit.cover, // 填满整个区域
-                                                  onDetect: _handleScan,
-                                                ),
-                                              ),
-                                            ),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                          child: MobileScanner(
+                                            controller: _scannerController,
+                                            fit: BoxFit.cover,
+                                            onDetect: _handleScan,
                                           ),
                                         ),
-
-                                        // 新增：左上角閃光燈按鈕
+                                        // 四角高亮装飾
+                                        Positioned.fill(
+                                          child: CustomPaint(
+                                            painter: _CornerDecorationPainter(),
+                                          ),
+                                        ),
+                                        // 闪光灯按钮
                                         Positioned(
-                                          top: 16.0,
-                                          left: 16.0,
+                                          top: 14.0,
+                                          left: 14.0,
                                           child: CupertinoButton(
                                             padding: const EdgeInsets.all(8.0),
                                             color: CupertinoColors.black
-                                                .withValues(
-                                                  red: 0,
-                                                  green: 0,
-                                                  blue: 0,
-                                                  alpha: 0.5,
-                                                ),
+                                                .withOpacity(0.32),
                                             borderRadius: BorderRadius.circular(
                                               20.0,
                                             ),
@@ -605,17 +633,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                         ),
                                       ],
                                     ),
-                                    // Container(
-                                    //   //螢幕中的綠匡(全景掃描不需要)
-                                    //   width: scanAreaSize,
-                                    //   height: scanAreaSize * 0.8,
-                                    //   decoration: BoxDecoration(
-                                    //     border: Border.all(
-                                    //         color: CupertinoColors.activeGreen, width: 2),
-                                    //     borderRadius: BorderRadius.circular(12),
-                                    //   ),
-                                    // ),
-                                  ],
+                                  ),
                                 ),
                               ),
                           SizedBox(height: 16),
@@ -779,11 +797,105 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
     return Text(
       info,
       style: const TextStyle(
-        color: Color.fromARGB(255, 0, 0, 255),
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
+        color: Color(0xFF204080), // 柔和蓝色
+        fontSize: 20.0, // 更大
+        fontWeight: FontWeight.w600, // 半粗体
+        letterSpacing: 0.5,
+        shadows: [
+          Shadow(
+            color: Color(0x22000000),
+            offset: Offset(0, 1),
+            blurRadius: 2,
+          ),
+        ],
       ),
       textAlign: TextAlign.center,
     );
   }
+}
+
+// 四角高亮装饰Painter
+class _CornerDecorationPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint =
+        Paint()
+          ..color = const Color(0xFF1E90FF)
+          ..strokeWidth = 4
+          ..style = PaintingStyle.stroke;
+    const double cornerLen = 28;
+    const double radius = 20;
+    // 左上
+    canvas.drawArc(
+      Rect.fromLTWH(0, 0, radius * 2, radius * 2),
+      3.14,
+      1.57,
+      false,
+      paint,
+    );
+    canvas.drawLine(Offset(0, radius), Offset(0, cornerLen), paint);
+    canvas.drawLine(Offset(radius, 0), Offset(cornerLen, 0), paint);
+    // 右上
+    canvas.drawArc(
+      Rect.fromLTWH(size.width - radius * 2, 0, radius * 2, radius * 2),
+      4.71,
+      1.57,
+      false,
+      paint,
+    );
+    canvas.drawLine(
+      Offset(size.width, radius),
+      Offset(size.width, cornerLen),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(size.width - radius, 0),
+      Offset(size.width - cornerLen, 0),
+      paint,
+    );
+    // 左下
+    canvas.drawArc(
+      Rect.fromLTWH(0, size.height - radius * 2, radius * 2, radius * 2),
+      1.57,
+      1.57,
+      false,
+      paint,
+    );
+    canvas.drawLine(
+      Offset(0, size.height - radius),
+      Offset(0, size.height - cornerLen),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(radius, size.height),
+      Offset(cornerLen, size.height),
+      paint,
+    );
+    // 右下
+    canvas.drawArc(
+      Rect.fromLTWH(
+        size.width - radius * 2,
+        size.height - radius * 2,
+        radius * 2,
+        radius * 2,
+      ),
+      0,
+      1.57,
+      false,
+      paint,
+    );
+    canvas.drawLine(
+      Offset(size.width, size.height - radius),
+      Offset(size.width, size.height - cornerLen),
+      paint,
+    );
+    canvas.drawLine(
+      Offset(size.width - radius, size.height),
+      Offset(size.width - cornerLen, size.height),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

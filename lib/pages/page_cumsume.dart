@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import 'package:prms/utility/prms_data_check.dart';
@@ -195,12 +196,38 @@ class _PageFun1State extends State<PageCunsume> {
                                   left: 4.0,
                                   bottom: 4.0,
                                 ),
-                                child: Text(
-                                  'Flow Stage ( PR Consume ) :',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: CupertinoColors.systemGrey,
-                                    fontWeight: FontWeight.w600,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: CupertinoColors.systemGrey6,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 10,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 3,
+                                        height: 22,
+                                        decoration: BoxDecoration(
+                                          color: CupertinoColors.systemGrey3,
+                                          borderRadius: BorderRadius.circular(
+                                            2,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Flow Stage ( PR Consume )',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: CupertinoColors.activeBlue,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -429,170 +456,151 @@ class _PageFun1State extends State<PageCunsume> {
                             ),
                           ),
                           const SizedBox(height: 8),
+                          // 当前阶段提示区域优化
                           Padding(
-                            padding: const EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(
+                              left: 10.0,
+                              right: 10.0,
+                            ),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                page_stage == "User"
-                                    ? const Icon(
-                                      CupertinoIcons.person,
-                                      size: 28,
-                                      color: CupertinoColors.activeBlue,
-                                    )
-                                    : page_stage == "Machine"
-                                    ? const Icon(
-                                      CupertinoIcons.gear_alt, // 设备图标
-                                      size: 28,
-                                      color: CupertinoColors.activeBlue,
-                                    )
-                                    : page_stage == "Old_PR"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(0xFFB8860B)
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
+                                Expanded(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // 阶段图标
+                                      page_stage == "User"
+                                          ? const Icon(
+                                            CupertinoIcons.person,
+                                            size: 32,
+                                            color: CupertinoColors.activeBlue,
+                                          )
+                                          : page_stage == "Machine"
+                                          ? const Icon(
+                                            CupertinoIcons.gear_alt,
+                                            size: 32,
+                                            color: CupertinoColors.activeBlue,
+                                          )
+                                          : page_stage == "Old_PR"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons.drop_fill,
+                                                size: 28,
+                                                color: Color(0xFFB8860B),
+                                              ),
+                                              SizedBox(width: 2),
+                                              Icon(
+                                                CupertinoIcons.barcode,
+                                                size: 28,
+                                                color: Color(0xFFB8860B),
+                                              ),
+                                            ],
+                                          )
+                                          : page_stage == "Old_Tube"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons.arrow_merge,
+                                                size: 28,
+                                                color: Color(0xFFB8860B),
+                                              ),
+                                              SizedBox(width: 2),
+                                              Icon(
+                                                CupertinoIcons.barcode,
+                                                size: 28,
+                                                color: Color(0xFFB8860B),
+                                              ),
+                                            ],
+                                          )
+                                          : page_stage == "New_PR"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons.drop_fill,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                              SizedBox(width: 2),
+                                              Icon(
+                                                CupertinoIcons.barcode,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                            ],
+                                          )
+                                          : page_stage == "New_Tube"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons.arrow_merge,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                              SizedBox(width: 2),
+                                              Icon(
+                                                CupertinoIcons.barcode,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                            ],
+                                          )
+                                          : page_stage == "Complete"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Icon(
+                                                CupertinoIcons
+                                                    .check_mark_circled_solid,
+                                                size: 28,
+                                                color: Color(0xFF1E90FF),
+                                              ),
+                                            ],
+                                          )
+                                          : const Icon(
+                                            CupertinoIcons.add_circled,
+                                            size: 32,
+                                            color: CupertinoColors.activeBlue,
+                                          ),
+                                      SizedBox(width: 10),
+                                      // 阶段提示语
+                                      Flexible(
+                                        child: Text(
+                                          page_stage == "User"
+                                              ? 'Scan the barcode on your employee ID card.'
+                                              : page_stage == "Machine"
+                                              ? 'Scan the barcode on the machine.'
+                                              : page_stage == "Old_PR"
+                                              ? 'Scan the barcode on the old PR Bottle.'
+                                              : page_stage == "Old_Tube"
+                                              ? 'Scan the barcode on the tuble (pipeline).'
+                                              : page_stage == "New_PR"
+                                              ? 'Scan the barcode on the new PR Bottle.'
+                                              : page_stage == "New_Tube"
+                                              ? 'Scan the barcode on the tuble (pipeline).'
+                                              : page_stage == "Complete"
+                                              ? 'Complete, Below List to confirm.'
+                                              : 'Scan Old ID',
+                                          style: TextStyle(
+                                            fontSize: 17,
+                                            color: CupertinoColors.activeBlue,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(0xFFB8860B)
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "Old_Tube"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(0xFFB8860B)
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(0xFFB8860B)
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "New_PR"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_PR"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_PR"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "New_Tube"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 24,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : page_stage == "Complete"
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(
-                                          CupertinoIcons
-                                              .check_mark_circled_solid,
-                                          size: 24,
-                                          color:
-                                              page_stage == "Complete"
-                                                  ? Color(0xFF1E90FF)
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                      ],
-                                    )
-                                    : const Icon(
-                                      CupertinoIcons.add_circled,
-                                      size: 28,
-                                      color: CupertinoColors.activeBlue,
-                                    ),
-                                SizedBox(width: 4),
-                                Text(
-                                  page_stage == "User"
-                                      ? 'Scan the barcode on your employee ID card.'
-                                      : page_stage == "Machine"
-                                      ? 'Scan the barcode on the machine.'
-                                      : page_stage == "Old_PR"
-                                      ? 'Scan the barcode on the old PR Bottle.'
-                                      : page_stage == "Old_Tube"
-                                      ? 'Scan the barcode on the tuble (pipeline).'
-                                      : page_stage == "New_PR"
-                                      ? 'Scan the barcode on the new PR Bottle.'
-                                      : page_stage == "New_Tube"
-                                      ? 'Scan the barcode on the tuble (pipeline).'
-                                      : page_stage == "Complete"
-                                      ? 'Complete,Bellow List to confirm.'
-                                      : 'Scan Old ID',
-                                  style: TextStyle(fontSize: 14),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -800,9 +808,8 @@ class _PageFun1State extends State<PageCunsume> {
                                   final visibleFraction =
                                       visibilityInfo.visibleFraction;
                                   debugPrint(
-                                    'Scanner visibility: ${visibleFraction * 100}%',
+                                    'Scanner visibility: \\${visibleFraction * 100}%',
                                   );
-
                                   if (visibleFraction > 0) {
                                     debugPrint(
                                       'Scanner is visible, starting camera...',
@@ -811,7 +818,7 @@ class _PageFun1State extends State<PageCunsume> {
                                       error,
                                     ) {
                                       debugPrint(
-                                        'Error starting camera: $error',
+                                        'Error starting camera: \\${error}',
                                       );
                                     });
                                   } else {
@@ -821,51 +828,72 @@ class _PageFun1State extends State<PageCunsume> {
                                     _scannerController.stop();
                                   }
                                 },
-
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Stack(
+                                child: Center(
+                                  child: Container(
+                                    width: deviceSize.width * 0.85,
+                                    height: deviceSize.height * 0.36,
+                                    decoration: BoxDecoration(
+                                      color: CupertinoColors.systemGrey6
+                                          .withOpacity(0.85),
+                                      borderRadius: BorderRadius.circular(18),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: CupertinoColors.systemGrey4
+                                              .withOpacity(0.18),
+                                          blurRadius: 16,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Stack(
                                       children: [
-                                        ClipRect(
-                                          // 使用ClipRect裁剪超出邊界部分
-                                          child: SizedBox(
-                                            width: deviceSize.width,
-                                            height:
-                                                deviceSize.height *
-                                                0.4, // 限制高度比例
-                                            child: SizedBox(
-                                              width: double.infinity,
-                                              height: 60,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                      4,
-                                                    ), // 可选：圆角
-                                                child: MobileScanner(
-                                                  controller:
-                                                      _scannerController,
-                                                  fit: BoxFit.cover, // 填满整个区域
-                                                  onDetect: _handleScan,
-                                                ),
-                                              ),
-                                            ),
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            18,
+                                          ),
+                                          child: MobileScanner(
+                                            controller: _scannerController,
+                                            fit: BoxFit.cover,
+                                            onDetect: _handleScan,
                                           ),
                                         ),
-
-                                        // 新增：左上角閃光燈按鈕
+                                        // 四角高亮
+                                        Positioned(
+                                          top: 0,
+                                          left: 0,
+                                          child: _buildCornerDecoration(
+                                            alignment: Alignment.topLeft,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 0,
+                                          right: 0,
+                                          child: _buildCornerDecoration(
+                                            alignment: Alignment.topRight,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 0,
+                                          left: 0,
+                                          child: _buildCornerDecoration(
+                                            alignment: Alignment.bottomLeft,
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: _buildCornerDecoration(
+                                            alignment: Alignment.bottomRight,
+                                          ),
+                                        ),
+                                        // 闪光灯按钮
                                         Positioned(
                                           top: 16.0,
                                           left: 16.0,
                                           child: CupertinoButton(
                                             padding: const EdgeInsets.all(8.0),
                                             color: CupertinoColors.black
-                                                .withValues(
-                                                  red: 0,
-                                                  green: 0,
-                                                  blue: 0,
-                                                  alpha: 0.5,
-                                                ),
+                                                .withOpacity(0.5),
                                             borderRadius: BorderRadius.circular(
                                               20.0,
                                             ),
@@ -882,17 +910,7 @@ class _PageFun1State extends State<PageCunsume> {
                                         ),
                                       ],
                                     ),
-                                    // Container(
-                                    //   //螢幕中的綠匡(全景掃描不需要)
-                                    //   width: scanAreaSize,
-                                    //   height: scanAreaSize * 0.8,
-                                    //   decoration: BoxDecoration(
-                                    //     border: Border.all(
-                                    //         color: CupertinoColors.activeGreen, width: 2),
-                                    //     borderRadius: BorderRadius.circular(12),
-                                    //   ),
-                                    // ),
-                                  ],
+                                  ),
                                 ),
                               ),
                           SizedBox(height: 16),
@@ -1060,11 +1078,68 @@ class _PageFun1State extends State<PageCunsume> {
     return Text(
       info,
       style: const TextStyle(
-        color: Color.fromARGB(255, 0, 0, 255),
-        fontSize: 18.0,
-        fontWeight: FontWeight.bold,
+        color: Color(0xFF204080), // 柔和蓝色
+        fontSize: 20.0, // 更大
+        fontWeight: FontWeight.w600, // 半粗体
+        letterSpacing: 0.5,
+        shadows: [
+          Shadow(color: Color(0x22000000), offset: Offset(0, 1), blurRadius: 2),
+        ],
       ),
       textAlign: TextAlign.center,
+    );
+  }
+
+  // 四角高亮装饰方法
+  Widget _buildCornerDecoration({required Alignment alignment}) {
+    return Align(
+      alignment: alignment,
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          border: Border(
+            top:
+                alignment == Alignment.topLeft ||
+                        alignment == Alignment.topRight
+                    ? BorderSide(color: CupertinoColors.activeBlue, width: 4)
+                    : BorderSide.none,
+            left:
+                alignment == Alignment.topLeft ||
+                        alignment == Alignment.bottomLeft
+                    ? BorderSide(color: CupertinoColors.activeBlue, width: 4)
+                    : BorderSide.none,
+            right:
+                alignment == Alignment.topRight ||
+                        alignment == Alignment.bottomRight
+                    ? BorderSide(color: CupertinoColors.activeBlue, width: 4)
+                    : BorderSide.none,
+            bottom:
+                alignment == Alignment.bottomLeft ||
+                        alignment == Alignment.bottomRight
+                    ? BorderSide(color: CupertinoColors.activeBlue, width: 4)
+                    : BorderSide.none,
+          ),
+          borderRadius: BorderRadius.only(
+            topLeft:
+                alignment == Alignment.topLeft
+                    ? Radius.circular(18)
+                    : Radius.zero,
+            topRight:
+                alignment == Alignment.topRight
+                    ? Radius.circular(18)
+                    : Radius.zero,
+            bottomLeft:
+                alignment == Alignment.bottomLeft
+                    ? Radius.circular(18)
+                    : Radius.zero,
+            bottomRight:
+                alignment == Alignment.bottomRight
+                    ? Radius.circular(18)
+                    : Radius.zero,
+          ),
+        ),
+      ),
     );
   }
 }

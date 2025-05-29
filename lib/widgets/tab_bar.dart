@@ -16,8 +16,8 @@ class CustomTabBar extends CupertinoTabBar {
              label: 'Home',
            ),
            BottomNavigationBarItem(
-             icon: Icon(CupertinoIcons.info),
-             label: 'About',
+             icon: Icon(CupertinoIcons.settings),
+             label: 'Setting',
            ),
          ],
        );
