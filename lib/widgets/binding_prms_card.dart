@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:prms/pages/page_cumsume.dart';
 import 'package:prms/pages/page_move_in_rack.dart';
 import 'package:prms/pages/page_move_out_rack.dart';
@@ -28,11 +29,18 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
         vertical: 15.0,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFF), // 更清晰的iOS风格淡灰蓝底色
-        borderRadius: BorderRadius.circular(4.0),
+        gradient: const LinearGradient(
+          colors: [
+            Color(0xFFE3F2FD), // 浅蓝色
+            Color(0xFFFFFFFF), // 白色
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
-            color: CupertinoColors.black.withOpacity(0.10),
+            color: Colors.grey.withOpacity(0.2),
             spreadRadius: 2,
             blurRadius: 8,
             offset: const Offset(0, 4),
