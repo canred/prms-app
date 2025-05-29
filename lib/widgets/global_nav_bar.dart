@@ -21,7 +21,7 @@ class GlobalNavBar extends StatefulWidget
   State<GlobalNavBar> createState() => GlobalNavBarState();
 
   @override
-  Size get preferredSize => const Size.fromHeight(44);
+  Size get preferredSize => const Size.fromHeight(40); // 调整高度为32，原为44
 
   @override
   bool shouldFullyObstruct(BuildContext context) => true;
@@ -29,6 +29,7 @@ class GlobalNavBar extends StatefulWidget
 
 class GlobalNavBarState extends State<GlobalNavBar> {
   late String _title;
+  bool _visible = true;
 
   @override
   void initState() {
@@ -47,8 +48,15 @@ class GlobalNavBarState extends State<GlobalNavBar> {
     });
   }
 
+  void setNavBarVisible(bool visible) {
+    setState(() {
+      _visible = visible;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!_visible) return const SizedBox.shrink();
     return CupertinoNavigationBar(
       middle: Text(
         _title,

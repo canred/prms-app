@@ -46,7 +46,10 @@ class _PartsPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: globalNavBar,
+      navigationBar:
+          _shouldShowNavigationBar()
+              ? globalNavBar
+              : null, // Dynamically control navigationBar visibility
       child: CupertinoTabScaffold(
         tabBar: CustomTabBar(currentIndex: _selectedIndex, onTap: _onTabTapped),
         tabBuilder: (BuildContext context, int index) {
@@ -69,5 +72,10 @@ class _PartsPageState extends State<MainPage> {
         },
       ),
     );
+  }
+
+  bool _shouldShowNavigationBar() {
+    // Hide navigationBar for specific tabs, e.g., Tab 2 and Tab 3
+    return _selectedIndex != 1;
   }
 }
