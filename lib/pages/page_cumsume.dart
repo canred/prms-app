@@ -408,8 +408,8 @@ class _PageFun1State extends State<PageCunsume> {
                             ),
                             child: LayoutBuilder(
                               builder: (context, constraints) {
-                                final dashWidth = 3.0;
-                                final dashSpace = 4.0;
+                                final dashWidth = 1.5; // 更细腻
+                                final dashSpace = 2.0; // 间距更小
                                 final dashCount =
                                     (constraints.maxWidth /
                                             (dashWidth + dashSpace))
@@ -421,7 +421,7 @@ class _PageFun1State extends State<PageCunsume> {
                                     return Container(
                                       width: dashWidth,
                                       height: 1,
-                                      color: const Color(0xFF888888), // 深一点的灰色
+                                      color: const Color(0xFFCCCCCC), // 更浅的灰色
                                     );
                                   }),
                                 );

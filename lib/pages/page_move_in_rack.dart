@@ -266,8 +266,8 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                             ),
                             child: LayoutBuilder(
                               builder: (context, constraints) {
-                                final dashWidth = 3.0;
-                                final dashSpace = 4.0;
+                                final dashWidth = 1.5; // 更细腻
+                                final dashSpace = 2.0; // 间距更小
                                 final dashCount =
                                     (constraints.maxWidth /
                                             (dashWidth + dashSpace))
@@ -754,8 +754,6 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
       ),
     );
   }
-
-  
 
   // 專業iOS表單行（帶圖標與顏色）
   Widget _buildInfoRowStyled(

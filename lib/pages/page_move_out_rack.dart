@@ -57,7 +57,6 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
 
   checkStage() {
     if (p_user_id.isNotEmpty &&
-        
         p_pr[0].trim().isNotEmpty &&
         p_rack_id.isNotEmpty) {
       return true;
@@ -266,8 +265,8 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                             ),
                             child: LayoutBuilder(
                               builder: (context, constraints) {
-                                final dashWidth = 3.0;
-                                final dashSpace = 4.0;
+                                final dashWidth = 1.5; // 更细腻
+                                final dashSpace = 2.0; // 间距更小
                                 final dashCount =
                                     (constraints.maxWidth /
                                             (dashWidth + dashSpace))
@@ -754,7 +753,6 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
       ),
     );
   }
-
 
   // 專業iOS表單行（帶圖標與顏色）
   Widget _buildInfoRowStyled(
