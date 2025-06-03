@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-import 'package:prms/utility/prms_data_check.dart';
-import 'package:prms/widgets/global_nav_bar.dart';
+import 'package:prmsapp/utility/prms_data_check.dart';
+import 'package:prmsapp/widgets/global_nav_bar.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
 

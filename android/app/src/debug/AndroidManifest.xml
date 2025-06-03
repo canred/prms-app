@@ -4,31 +4,4 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <meta-data
-    android:name="firebase_messaging_auto_init_enabled"
-    android:value="false" />
-    <meta-data
-    android:name="firebase_analytics_collection_enabled"
-    android:value="false" />
-    <meta-data
-    android:name="google_analytics_adid_collection_enabled"
-    android:value="false" />
-    <meta-data
-    android:name="google_analytics_ssaid_collection_enabled"
-    android:value="false" />
-    <meta-data
-    android:name="google_analytics_default_allow_ad_personalization_signals"
-    android:value="false" />
-    <meta-data
-    android:name="firebase_performance_collection_enabled"
-    android:value="false" />
-    <meta-data
-    android:name="firebase_data_collection_default_enabled"
-    android:value="false" />
-    <meta-data
-    android:name="firebase_crashlytics_collection_enabled"
-    android:value="false" />
-    <meta-data
-    android:name="firebase_ml_vision_analytics_enabled"
-    android:value="false" />
 </manifest>

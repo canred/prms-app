@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:prms/widgets/scan_history_manager.dart';
+import 'package:prmsapp/widgets/scan_history_manager.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:prms/widgets/toast_util.dart';
+import 'package:prmsapp/widgets/toast_util.dart';
 
 /// 掃描歷史頁面
 ///

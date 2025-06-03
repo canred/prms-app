@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart'; // 引入services套件以設定系統UI樣式
-import 'package:prms/pages/main_page.dart';
+import 'package:prmsapp/pages/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:prms/services/messaging_service.dart';
+import 'package:prmsapp/services/messaging_service.dart';
 
 /// ViScanner應用程序主入口點
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // 確保Flutter綁定已初始化
 
   // 初始化Firebase
-  try {
-    await Firebase.initializeApp();
-  } catch (e) {
-    print("Firebase initialization failed: $e");
-    return;
-  }
+  // try {
+  //   await Firebase.initializeApp();
+  // } catch (e) {
+  //   print("Firebase initialization failed: $e");
+  //   return;
+  // }
   // 設定狀態列樣式，使其背景色跟隨APP主題
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -25,7 +25,7 @@ void main() async {
   );
 
   // 初始化推播通知服務
-  await PushNotificationService().init();
+  // await PushNotificationService().init();
 
   runApp(const PrmsApp());
 }

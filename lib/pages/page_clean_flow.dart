@@ -2,8 +2,8 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:prms/utility/prms_data_check.dart';
-import 'package:prms/widgets/global_nav_bar.dart';
+import 'package:prmsapp/utility/prms_data_check.dart';
+import 'package:prmsapp/widgets/global_nav_bar.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
 import 'package:flutter/material.dart';
@@ -156,13 +156,19 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
+                                padding: const EdgeInsets.only(
+                                  left: 4.0,
+                                  bottom: 4.0,
+                                ),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     color: CupertinoColors.systemGrey6,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
-                                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 4,
+                                    horizontal: 10,
+                                  ),
                                   child: Row(
                                     children: [
                                       Container(
@@ -170,7 +176,9 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                         height: 22,
                                         decoration: BoxDecoration(
                                           color: CupertinoColors.systemGrey3,
-                                          borderRadius: BorderRadius.circular(2),
+                                          borderRadius: BorderRadius.circular(
+                                            2,
+                                          ),
                                         ),
                                       ),
                                       SizedBox(width: 8),
@@ -802,11 +810,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
         fontWeight: FontWeight.w600, // 半粗体
         letterSpacing: 0.5,
         shadows: [
-          Shadow(
-            color: Color(0x22000000),
-            offset: Offset(0, 1),
-            blurRadius: 2,
-          ),
+          Shadow(color: Color(0x22000000), offset: Offset(0, 1), blurRadius: 2),
         ],
       ),
       textAlign: TextAlign.center,

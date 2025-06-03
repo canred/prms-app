@@ -2,12 +2,12 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:prms/pages/page_cumsume.dart';
-import 'package:prms/pages/page_move_in_rack.dart';
-import 'package:prms/pages/page_move_out_rack.dart';
-import 'package:prms/pages/page_put_on_flow.dart';
-import 'package:prms/pages/page_take_off_flow.dart';
-import 'package:prms/pages/page_clean_flow.dart';
+import 'package:prmsapp/pages/page_cumsume.dart';
+import 'package:prmsapp/pages/page_move_in_rack.dart';
+import 'package:prmsapp/pages/page_move_out_rack.dart';
+import 'package:prmsapp/pages/page_put_on_flow.dart';
+import 'package:prmsapp/pages/page_take_off_flow.dart';
+import 'package:prmsapp/pages/page_clean_flow.dart';
 
 class BindingPrmsCard extends StatefulWidget {
   const BindingPrmsCard({super.key});

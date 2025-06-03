@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:prms/services/mqtt_service.dart';
-import 'package:prms/widgets/binding_prms_card.dart';
+import 'package:prmsapp/services/mqtt_service.dart';
+import 'package:prmsapp/widgets/binding_prms_card.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
