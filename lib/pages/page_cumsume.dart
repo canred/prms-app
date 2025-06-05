@@ -32,12 +32,13 @@ class _PageFun1State extends State<PageCunsume> {
   // 分别为5个阶段的处理作业
   // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
   String page_stage =
-      "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube , Complete
+      "User"; // User , Machine , Old_PR , Old_Tube ,Nozzle, New_PR, New_Tube , Complete
   //String p_user_id = "220653 / HHCHENX"; // 220653
   String p_user_id = ""; // 220653
   String p_machine_id = "";
   String p_old_pr_id = "";
   String p_old_tube_id = "";
+  String p_nozzle_id = "";
   String p_new_pr_id = "";
   String p_new_tube_id = "";
 
@@ -249,10 +250,22 @@ class _PageFun1State extends State<PageCunsume> {
                                   ),
                                   _buildStageButton(
                                     context,
-                                    icon:
-                                        CupertinoIcons
-                                            .gear_big, // 更贴合“机台/生产设备”的图标
-                                    label: 'Machine',
+                                    iconWidget: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'assets/machine.png',
+                                          width: 22,
+                                          height: 22,
+                                          color:
+                                              page_stage == "Machine"
+                                                  ? CupertinoColors.white
+                                                  : CupertinoColors.activeBlue,
+                                        ),
+                                      ],
+                                    ),
+                                    label: 'Mach.',
                                     selected: page_stage == "Machine",
                                     onTap: () {
                                       setState(() {
@@ -268,24 +281,13 @@ class _PageFun1State extends State<PageCunsume> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 16,
+                                          Icons.science,
+                                          size: 22,
                                           color:
                                               page_stage == "Old_PR"
                                                   ? Color(
                                                     0xFFB8860B,
                                                   ) // 深金色/棕色，代表“旧”
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_PR"
-                                                  ? Color(0xFFB8860B) // 同上
                                                   : Color(
                                                     0xFFB8860B,
                                                   ).withOpacity(0.7),
@@ -308,8 +310,8 @@ class _PageFun1State extends State<PageCunsume> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 16,
+                                          CupertinoIcons.tag,
+                                          size: 22,
                                           color:
                                               page_stage == "Old_Tube"
                                                   ? Color(
@@ -319,20 +321,9 @@ class _PageFun1State extends State<PageCunsume> {
                                                     0xFFB8860B,
                                                   ).withOpacity(0.7),
                                         ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "Old_Tube"
-                                                  ? Color(0xFFB8860B) // 同上
-                                                  : Color(
-                                                    0xFFB8860B,
-                                                  ).withOpacity(0.7),
-                                        ),
                                       ],
                                     ),
-                                    label: 'Old Tube',
+                                    label: 'Tube',
                                     selected: page_stage == "Old_Tube",
                                     onTap: () {
                                       setState(() {
@@ -348,10 +339,10 @@ class _PageFun1State extends State<PageCunsume> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 16,
+                                          CupertinoIcons.arrow_uturn_down,
+                                          size: 22,
                                           color:
-                                              page_stage == "New_PR"
+                                              page_stage == "Nozzle"
                                                   ? Color(
                                                     0xFF1E90FF,
                                                   ) // Dodger Blue，代表“新”
@@ -359,13 +350,32 @@ class _PageFun1State extends State<PageCunsume> {
                                                     0xFF1E90FF,
                                                   ).withOpacity(0.7),
                                         ),
-                                        SizedBox(width: 2),
+                                      ],
+                                    ),
+                                    label: 'Nozzle',
+                                    selected: page_stage == "Nozzle",
+                                    onTap: () {
+                                      setState(() {
+                                        page_stage = "Nozzle";
+                                      });
+                                    },
+                                    height: 56,
+                                  ),
+
+                                  _buildStageButton(
+                                    context,
+                                    iconWidget: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
                                         Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
+                                          Icons.science,
+                                          size: 22,
                                           color:
                                               page_stage == "New_PR"
-                                                  ? Color(0xFF1E90FF) // 同上
+                                                  ? Color(
+                                                    0xFF1E90FF,
+                                                  ) // Dodger Blue，代表“新”
                                                   : Color(
                                                     0xFF1E90FF,
                                                   ).withOpacity(0.7),
@@ -381,6 +391,7 @@ class _PageFun1State extends State<PageCunsume> {
                                     },
                                     height: 56,
                                   ),
+
                                   _buildStageButton(
                                     context,
                                     iconWidget: Row(
@@ -390,8 +401,8 @@ class _PageFun1State extends State<PageCunsume> {
                                           MainAxisSize.min, // 修正按钮内容宽度
                                       children: [
                                         Icon(
-                                          CupertinoIcons.arrow_merge,
-                                          size: 16,
+                                          CupertinoIcons.tag,
+                                          size: 22,
                                           color:
                                               page_stage == "New_Tube"
                                                   ? Color(
@@ -401,20 +412,9 @@ class _PageFun1State extends State<PageCunsume> {
                                                     0xFF1E90FF,
                                                   ).withOpacity(0.7),
                                         ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF) // 同上
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
                                       ],
                                     ),
-                                    label: 'New Tube',
+                                    label: 'Tube',
                                     selected: page_stage == "New_Tube",
                                     onTap: () {
                                       setState(() {
