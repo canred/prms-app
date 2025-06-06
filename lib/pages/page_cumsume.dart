@@ -30,7 +30,7 @@ class _PageFun1State extends State<PageCunsume> {
   final Key _scannerVisibilityKey = UniqueKey();
 
   // 分别为5个阶段的处理作业
-  // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube
+  // User , Machine , Old_PR , Old_Tube ,Nozzle, New_PR, New_Tube , Complete
   String page_stage =
       "User"; // User , Machine , Old_PR , Old_Tube ,Nozzle, New_PR, New_Tube , Complete
   //String p_user_id = "220653 / HHCHENX"; // 220653
@@ -65,6 +65,7 @@ class _PageFun1State extends State<PageCunsume> {
         p_machine_id.isNotEmpty &&
         p_old_pr_id.isNotEmpty &&
         p_old_tube_id.isNotEmpty &&
+        p_nozzle_id.isNotEmpty &&
         p_new_pr_id.isNotEmpty &&
         p_new_tube_id.isNotEmpty) {
       return true;
@@ -127,6 +128,15 @@ class _PageFun1State extends State<PageCunsume> {
           if (PrmsDataCheck.isValidTubeId(scanContent)) {
             setState(() {
               p_old_tube_id = scanContent;
+              page_stage = "Nozzle";
+            });
+          }
+        } else if (page_stage == "Nozzle") {
+          // 当符合 Old Tube ID 的格式时，才会更新 p_old_pr_id
+          // TUBE開頭+6位數字，可依實際需求調整
+          if (PrmsDataCheck.isValidNozzleId(scanContent)) {
+            setState(() {
+              p_nozzle_id = scanContent;
               page_stage = "New_PR";
             });
           }
@@ -134,19 +144,27 @@ class _PageFun1State extends State<PageCunsume> {
           // 当符合 New PR ID 的格式时，才会更新 p_old_pr_id
           // PR開頭+6位數字，可依實際需求調整
           if (PrmsDataCheck.isValidPrId(scanContent)) {
-            setState(() {
-              p_new_pr_id = scanContent;
-              page_stage = "New_Tube";
-            });
+            if (p_old_pr_id.trim().isNotEmpty &&
+                p_old_pr_id.trim() != scanContent.trim()) {
+              // 如果新PR ID和旧PR ID不同，才允许更新
+              setState(() {
+                p_new_pr_id = scanContent;
+                page_stage = "New_Tube";
+              });
+            }
           }
         } else if (page_stage == "New_Tube") {
           // 当符合 New Tube ID 的格式时，才会更新 p_old_pr_id
           // TUBE開頭+6位數字，可依實際需求調整
           if (PrmsDataCheck.isValidTubeId(scanContent)) {
-            setState(() {
-              p_new_tube_id = scanContent;
-              page_stage = "Complete";
-            });
+            if (p_old_tube_id.trim().isNotEmpty &&
+                p_old_tube_id.trim() != scanContent.trim()) {
+              // 如果新PR ID和旧PR ID不同，才允许更新
+              setState(() {
+                p_new_tube_id = scanContent;
+                page_stage = "Complete";
+              });
+            }
           }
         }
 
@@ -480,9 +498,10 @@ class _PageFun1State extends State<PageCunsume> {
                                             color: CupertinoColors.activeBlue,
                                           )
                                           : page_stage == "Machine"
-                                          ? const Icon(
-                                            CupertinoIcons.gear_alt,
-                                            size: 32,
+                                          ? Image.asset(
+                                            'assets/machine.png',
+                                            width: 44,
+                                            height: 44,
                                             color: CupertinoColors.activeBlue,
                                           )
                                           : page_stage == "Old_PR"
@@ -490,13 +509,7 @@ class _PageFun1State extends State<PageCunsume> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons.drop_fill,
-                                                size: 28,
-                                                color: Color(0xFFB8860B),
-                                              ),
-                                              SizedBox(width: 2),
-                                              Icon(
-                                                CupertinoIcons.barcode,
+                                                Icons.science,
                                                 size: 28,
                                                 color: Color(0xFFB8860B),
                                               ),
@@ -507,15 +520,20 @@ class _PageFun1State extends State<PageCunsume> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons.arrow_merge,
+                                                CupertinoIcons.tag,
                                                 size: 28,
                                                 color: Color(0xFFB8860B),
                                               ),
-                                              SizedBox(width: 2),
+                                            ],
+                                          )
+                                          : page_stage == "Nozzle"
+                                          ? Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
                                               Icon(
-                                                CupertinoIcons.barcode,
+                                                CupertinoIcons.arrow_uturn_down,
                                                 size: 28,
-                                                color: Color(0xFFB8860B),
+                                                color: Color(0xFF1E90FF),
                                               ),
                                             ],
                                           )
@@ -524,13 +542,7 @@ class _PageFun1State extends State<PageCunsume> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons.drop_fill,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                              SizedBox(width: 2),
-                                              Icon(
-                                                CupertinoIcons.barcode,
+                                                Icons.science,
                                                 size: 28,
                                                 color: Color(0xFF1E90FF),
                                               ),
@@ -541,62 +553,59 @@ class _PageFun1State extends State<PageCunsume> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons.arrow_merge,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                              SizedBox(width: 2),
-                                              Icon(
-                                                CupertinoIcons.barcode,
+                                                CupertinoIcons.tag,
                                                 size: 28,
                                                 color: Color(0xFF1E90FF),
                                               ),
                                             ],
                                           )
-                                          : page_stage == "Complete"
-                                          ? Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons
-                                                    .check_mark_circled_solid,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                            ],
-                                          )
+                                          // : page_stage == "Complete"
+                                          // ? Row(
+                                          //   mainAxisSize: MainAxisSize.min,
+                                          //   children: [
+                                          //     Icon(
+                                          //       CupertinoIcons
+                                          //           .check_mark_circled_solid,
+                                          //       size: 28,
+                                          //       color: Color(0xFF1E90FF),
+                                          //     ),
+                                          //   ],
+                                          // )
                                           : const Icon(
                                             CupertinoIcons.add_circled,
-                                            size: 32,
+                                            size: 0,
                                             color: CupertinoColors.activeBlue,
                                           ),
-                                      SizedBox(width: 10),
+                                      //SizedBox(width: 10),
                                       // 阶段提示语
-                                      Flexible(
-                                        child: Text(
-                                          page_stage == "User"
-                                              ? 'Scan the barcode on your employee ID card.'
-                                              : page_stage == "Machine"
-                                              ? 'Scan the barcode on the machine.'
-                                              : page_stage == "Old_PR"
-                                              ? 'Scan the barcode on the old PR Bottle.'
-                                              : page_stage == "Old_Tube"
-                                              ? 'Scan the barcode on the tuble (pipeline).'
-                                              : page_stage == "New_PR"
-                                              ? 'Scan the barcode on the new PR Bottle.'
-                                              : page_stage == "New_Tube"
-                                              ? 'Scan the barcode on the tuble (pipeline).'
-                                              : page_stage == "Complete"
-                                              ? 'Complete, Below List to confirm.'
-                                              : 'Scan Old ID',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            color: CupertinoColors.activeBlue,
-                                            fontWeight: FontWeight.bold,
+                                      Visibility(
+                                        visible: page_stage != "Complete",
+                                        child: Flexible(
+                                          child: Text(
+                                            page_stage == "User"
+                                                ? 'Scan your employee ID .'
+                                                : page_stage == "Machine"
+                                                ? 'Scan machine\'s barcode.'
+                                                : page_stage == "Old_PR"
+                                                ? 'Scan barcode on old PR bottle.'
+                                                : page_stage == "Old_Tube"
+                                                ? 'Scan tube\'s barcode.'
+                                                : page_stage == "Nozzle"
+                                                ? 'Scan nozzle\'s barcode.'
+                                                : page_stage == "New_PR"
+                                                ? 'Scan barcode on the new PR bottle.'
+                                                : page_stage == "New_Tube"
+                                                ? 'Scan tube\'s barcode.'
+                                                : '',
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              color: CupertinoColors.activeBlue,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                          textAlign: TextAlign.left,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ],
@@ -606,23 +615,6 @@ class _PageFun1State extends State<PageCunsume> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Padding(
-                            padding:
-                                page_stage == "Complete"
-                                    ? EdgeInsets.only(bottom: 0.0)
-                                    : EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              page_stage == "Complete"
-                                  ? ""
-                                  : 'Scan your barcode or QR code in the box.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: const Color.fromARGB(255, 222, 60, 60),
-                              ),
-                            ),
-                          ),
-
                           // 我要加入 MobileScanner 功能
                           page_stage == "Complete"
                               ? Container(
@@ -688,21 +680,35 @@ class _PageFun1State extends State<PageCunsume> {
                                           _buildInfoRowStyled(
                                             'Machine Id',
                                             p_machine_id,
-                                            CupertinoIcons.gear_alt,
+                                            Icons.circle, // 传任意合法IconData避免类型错误
+                                            iconWidget: Image.asset(
+                                              'assets/machine.png',
+                                              width: 24,
+                                              height: 24,
+                                              color: CupertinoColors.activeBlue,
+                                            ),
                                           ),
                                           _buildDivider(),
                                           _buildInfoRowStyled(
                                             'Old PR Id',
                                             p_old_pr_id,
-                                            CupertinoIcons.drop_fill,
+                                            Icons.science,
+                                            color: Color(0xFFB8860B),
+                                          ),
+
+                                          _buildDivider(),
+                                          _buildInfoRowStyled(
+                                            'Tube Id(1)',
+                                            p_old_tube_id,
+                                            CupertinoIcons.tag,
                                             color: Color(0xFFB8860B),
                                           ),
                                           _buildDivider(),
                                           _buildInfoRowStyled(
-                                            'Old Tube Id',
-                                            p_old_tube_id,
-                                            CupertinoIcons.arrow_merge,
-                                            color: Color(0xFFB8860B),
+                                            'Nozzle Id',
+                                            p_nozzle_id,
+                                            CupertinoIcons.arrow_uturn_down,
+                                            color: Color.fromARGB(255, 6, 6, 6),
                                           ),
                                           _buildDivider(),
                                           _buildInfoRowStyled(
@@ -713,7 +719,7 @@ class _PageFun1State extends State<PageCunsume> {
                                           ),
                                           _buildDivider(),
                                           _buildInfoRowStyled(
-                                            'New Tube Id',
+                                            'Tube Id(2)',
                                             p_new_tube_id,
                                             CupertinoIcons.arrow_merge,
                                             color: Color(0xFF1E90FF),
@@ -1012,14 +1018,25 @@ class _PageFun1State extends State<PageCunsume> {
   Widget _buildInfoRowStyled(
     String label,
     String value,
-    IconData icon, {
+    IconData? icon, {
     Color? color,
+    Widget? iconWidget,
+    Image? img, // 新增参数
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
       child: Row(
         children: [
-          Icon(icon, size: 22, color: color ?? CupertinoColors.systemGrey),
+          iconWidget ??
+              (icon != null
+                  ? Icon(
+                    icon,
+                    size: 22,
+                    color: color ?? CupertinoColors.systemGrey,
+                  )
+                  : (img != null
+                      ? SizedBox(width: 22, height: 22, child: img)
+                      : SizedBox(width: 22, height: 22))),
           SizedBox(width: 10),
           SizedBox(
             width: 110,
@@ -1068,11 +1085,13 @@ class _PageFun1State extends State<PageCunsume> {
     } else if (page_stage == "Old_PR" && p_old_pr_id.isNotEmpty) {
       info = 'Old PR Id : ' + p_old_pr_id;
     } else if (page_stage == "Old_Tube" && p_old_tube_id.isNotEmpty) {
-      info = 'Old Tube Id : ' + p_old_tube_id;
+      info = 'Tube Id (1) : ' + p_old_tube_id;
+    } else if (page_stage == "Nozzle" && p_nozzle_id.isNotEmpty) {
+      info = 'Nozzle : ' + p_nozzle_id;
     } else if (page_stage == "New_PR" && p_new_pr_id.isNotEmpty) {
       info = 'New PR Id : ' + p_new_pr_id;
     } else if (page_stage == "New_Tube" && p_new_tube_id.isNotEmpty) {
-      info = 'New Tube Id : ' + p_new_tube_id;
+      info = 'Tube Id (2): ' + p_new_tube_id;
     }
     if (info.isEmpty) return const SizedBox.shrink();
     return Text(
