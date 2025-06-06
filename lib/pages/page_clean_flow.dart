@@ -352,15 +352,9 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                       Flexible(
                                         child: Text(
                                           page_stage == "User"
-                                              ? 'Scan the barcode on your employee ID card.'
+                                              ? 'Scan your employee ID.'
                                               : page_stage == "Machine"
-                                              ? 'Scan the barcode on the Machine.'
-                                              : page_stage == "PR"
-                                              ? 'Scan the barcode on the PR.'
-                                              : page_stage == "Rack"
-                                              ? 'Scan the barcode on the Rack.'
-                                              : page_stage == "Complete"
-                                              ? 'Complete, Below List to confirm.'
+                                              ? 'Scan machine\'s barcode.'
                                               : '',
                                           style: TextStyle(
                                             fontSize: 17,

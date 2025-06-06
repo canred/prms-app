@@ -60,7 +60,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                 _buildCupertinoButton(
                   context,
                   icon: CupertinoIcons.arrow_2_squarepath, // 交换/置换的合适图标
-                  label: 'Consume',
+                  label: ' Consume',
                   onPressed: () {
                     Navigator.of(context).push(
                       CupertinoPageRoute(
@@ -74,7 +74,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                 _buildCupertinoButton(
                   context,
                   icon: CupertinoIcons.tray_arrow_down, // 更贴合“放进柜子”功能的图标
-                  label: 'Move In Rack',
+                  label: ' Move In Rack',
                   onPressed: () {
                     Navigator.of(context).push(
                       CupertinoPageRoute(
@@ -88,7 +88,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                 _buildCupertinoButton(
                   context,
                   icon: CupertinoIcons.tray_arrow_up, // 更贴合“从柜子取出”功能的图标
-                  label: 'Move Out Rack',
+                  label: ' Move Out Rack',
                   onPressed: () {
                     Navigator.of(context).push(
                       CupertinoPageRoute(
@@ -101,10 +101,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                 // 光阻液上机
                 _buildCupertinoButtonWithIcons(
                   context,
-                  icons: [
-                    CupertinoIcons.arrow_up,
-                    CupertinoIcons.gear,
-                  ], // 上传+机台
+                  icons: [], // 不再用icon
                   label: 'Put On Flow',
                   onPressed: () {
                     Navigator.of(context).push(
@@ -113,12 +110,22 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                       ),
                     );
                   },
+                  // 新增 imageWidget 参数
+                  imageWidget: Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Image.asset(
+                      'assets/put_on_flow.png',
+                      width: 28,
+                      height: 28,
+                      color: CupertinoColors.activeBlue, // 使用活泼的蓝色
+                    ),
+                  ),
                 ),
                 SizedBox(height: 6),
                 // 光阻液下机
                 _buildCupertinoButtonWithIcons(
                   context,
-                  icons: [CupertinoIcons.arrow_down, CupertinoIcons.gear],
+                  icons: [], // 不再用icon
                   label: 'Take Off Flow',
                   onPressed: () {
                     Navigator.of(context).push(
@@ -127,13 +134,22 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                       ),
                     );
                   },
+                  imageWidget: Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: Image.asset(
+                      'assets/take_off_flow.png',
+                      width: 28,
+                      height: 28,
+                      color: CupertinoColors.activeBlue,
+                    ),
+                  ),
                 ),
                 SizedBox(height: 6),
                 // 光阻液解除 Alert
                 _buildCupertinoButton(
                   context,
                   icon: CupertinoIcons.refresh_circled, // 更贴合“清除/重置”用途的图标
-                  label: 'Clean Flow',
+                  label: '  Clean Flow',
                   onPressed: () {
                     Navigator.of(context).push(
                       CupertinoPageRoute(
@@ -222,6 +238,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
     required List<IconData> icons,
     required String label,
     required VoidCallback onPressed,
+    Widget? imageWidget, // 新增可选的imageWidget参数
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -236,6 +253,7 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            if (imageWidget != null) imageWidget, // 如果提供了imageWidget则显示
             Row(
               children:
                   icons

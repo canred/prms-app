@@ -220,24 +220,13 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          CupertinoIcons.drop_fill,
-                                          size: 16,
+                                          Icons.science,
+                                          //size: 28,
                                           color:
                                               page_stage == "PR"
                                                   ? Color(
                                                     0xFF1E90FF,
                                                   ) // Dodger Blue，代表“新”
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "PR"
-                                                  ? Color(0xFF1E90FF) // 同上
                                                   : Color(
                                                     0xFF1E90FF,
                                                   ).withOpacity(0.7),
@@ -261,7 +250,7 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                                       children: [
                                         Icon(
                                           Icons.inventory_2,
-                                          size: 16,
+                                          //size: 28,
                                           color:
                                               page_stage == "Rack"
                                                   ? Color(0xFF1E90FF) // 同上
@@ -314,119 +303,85 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                           ),
                           const SizedBox(height: 8),
                           // 当前阶段提示区域优化
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              left: 10.0,
-                              right: 10.0,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      // 阶段图标
-                                      page_stage == "User"
-                                          ? const Icon(
-                                            CupertinoIcons.person,
-                                            size: 32,
-                                            color: CupertinoColors.activeBlue,
-                                          )
-                                          : page_stage == "PR"
-                                          ? Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons.drop_fill,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                              SizedBox(width: 2),
-                                              Icon(
-                                                CupertinoIcons.barcode,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                            ],
-                                          )
-                                          : page_stage == "Rack"
-                                          ? Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                Icons.inventory_2,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                            ],
-                                          )
-                                          : page_stage == "Complete"
-                                          ? Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Icon(
-                                                CupertinoIcons
-                                                    .check_mark_circled_solid,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                            ],
-                                          )
-                                          : const Icon(
-                                            CupertinoIcons.add_circled,
-                                            size: 32,
-                                            color: CupertinoColors.activeBlue,
+                          if (page_stage != "Complete")
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 10.0,
+                                right: 10.0,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        // 阶段图标
+                                        page_stage == "User"
+                                            ? const Icon(
+                                              CupertinoIcons.person,
+                                              size: 32,
+                                              color: CupertinoColors.activeBlue,
+                                            )
+                                            : page_stage == "PR"
+                                            ? Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.science,
+                                                  size: 28,
+                                                  color: Color(0xFF1E90FF),
+                                                ),
+                                              ],
+                                            )
+                                            : page_stage == "Rack"
+                                            ? Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.inventory_2,
+                                                  size: 28,
+                                                  color: Color(0xFF1E90FF),
+                                                ),
+                                              ],
+                                            )
+                                            : const Icon(
+                                              CupertinoIcons.add_circled,
+                                              size: 0,
+                                              color: CupertinoColors.activeBlue,
+                                            ),
+                                        SizedBox(width: 10),
+                                        // 阶段提示语
+                                        Flexible(
+                                          child: Text(
+                                            page_stage == "User"
+                                                ? 'Scan your employee ID.'
+                                                : page_stage == "PR"
+                                                ? 'Scan barcode on PR(s) bottle.'
+                                                : page_stage == "Rack"
+                                                ? 'Scan barcode on the Rack.'
+                                                : '',
+                                            style: TextStyle(
+                                              fontSize: 17,
+                                              color: CupertinoColors.activeBlue,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
-                                      SizedBox(width: 10),
-                                      // 阶段提示语
-                                      Flexible(
-                                        child: Text(
-                                          page_stage == "User"
-                                              ? 'Scan the barcode on your employee ID card.'
-                                              : page_stage == "PR"
-                                              ? 'Scan the barcode on the PR Bottle.'
-                                              : page_stage == "Rack"
-                                              ? 'Scan the barcode on the Rack.'
-                                              : page_stage == "Complete"
-                                              ? 'Complete, Below List to confirm.'
-                                              : '',
-                                          style: TextStyle(
-                                            fontSize: 17,
-                                            color: CupertinoColors.activeBlue,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.left,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Padding(
-                            padding:
-                                page_stage == "Complete"
-                                    ? EdgeInsets.only(bottom: 0.0)
-                                    : EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              page_stage == "Complete"
-                                  ? ""
-                                  : 'Scan your barcode or QR code in the box.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: const Color.fromARGB(255, 222, 60, 60),
+                                ],
                               ),
                             ),
-                          ),
+                          const SizedBox(height: 16),
 
                           // 我要加入 MobileScanner 功能
                           page_stage == "Complete"
@@ -448,9 +403,9 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Consume Information',
+                                      'Move In Rack Information',
                                       style: TextStyle(
-                                        fontSize: 22,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.w900,
                                         color: CupertinoColors.activeBlue,
                                         letterSpacing: 1.2,
@@ -488,20 +443,22 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                                             'User Id',
                                             p_user_id,
                                             CupertinoIcons.person,
+                                            color: CupertinoColors.activeBlue,
                                           ),
                                           _buildDivider(),
                                           _buildInfoRowStyled(
                                             'PR',
                                             p_pr.join(', '),
-                                            CupertinoIcons.gear_alt,
+                                            Icons.science,
+                                            color: CupertinoColors.activeBlue,
                                           ),
                                           _buildDivider(),
 
                                           _buildInfoRowStyled(
                                             'Rack Id',
                                             p_rack_id,
-                                            CupertinoIcons.drop_fill,
-                                            color: Color(0xFF1E90FF),
+                                            Icons.inventory_2,
+                                            color: CupertinoColors.activeBlue,
                                           ),
                                         ],
                                       ),
@@ -523,8 +480,144 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                                               () => setState(
                                                 () => _isButtonPressed = false,
                                               ),
-                                          onTap: () {
-                                            // TODO: 在这里处理确认逻辑
+                                          onTap: () async {
+                                            setState(
+                                              () => _isButtonPressed = false,
+                                            );
+                                            await showCupertinoDialog(
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CupertinoAlertDialog(
+                                                    title: Row(
+                                                      children: [
+                                                        Icon(
+                                                          CupertinoIcons
+                                                              .check_mark_circled_solid,
+                                                          color:
+                                                              CupertinoColors
+                                                                  .activeGreen,
+                                                          size: 28,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text('Move In Rack'),
+                                                      ],
+                                                    ),
+                                                    content: Text(
+                                                      'Your info has been submitted successfully.',
+                                                    ),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        child: Text('Close'),
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop(); // 先关闭弹窗
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pushAndRemoveUntil(
+                                                            CupertinoPageRoute(
+                                                              builder:
+                                                                  (
+                                                                    context,
+                                                                  ) => MainPage(
+                                                                    title:
+                                                                        'PRMS APP',
+                                                                    initialTabIndex:
+                                                                        0,
+                                                                  ),
+                                                            ),
+                                                            (route) => false,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );
+                                          },
+                                          onDoubleTap: () async {
+                                            setState(
+                                              () => _isButtonPressed = false,
+                                            );
+                                            // 假设你有一个异常信息列表
+                                            List<String> errorMessages = [
+                                              '1：Network error',
+                                              '2：PR ID mismatch',
+                                              '3：Rack ID missmatch',
+                                              // 可以根据实际情况动态生成
+                                            ];
+                                            await showCupertinoDialog(
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CupertinoAlertDialog(
+                                                    title: Row(
+                                                      children: [
+                                                        Icon(
+                                                          CupertinoIcons
+                                                              .exclamationmark_circle_fill,
+                                                          color:
+                                                              CupertinoColors
+                                                                  .systemRed,
+                                                          size: 26,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text('Error'),
+                                                      ],
+                                                    ),
+                                                    content: ConstrainedBox(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                            maxHeight:
+                                                                MediaQuery.of(
+                                                                  context,
+                                                                ).size.height *
+                                                                0.4,
+                                                          ),
+                                                      child: SingleChildScrollView(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children:
+                                                              errorMessages
+                                                                  .map(
+                                                                    (
+                                                                      msg,
+                                                                    ) => Padding(
+                                                                      padding: const EdgeInsets.only(
+                                                                        bottom:
+                                                                            2.0,
+                                                                      ),
+                                                                      child: Text(
+                                                                        msg,
+                                                                        style: TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                  .toList(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        child: Text('Close'),
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop(); // 先关闭弹窗
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );
                                           },
                                           child: AnimatedScale(
                                             scale:
@@ -616,7 +709,7 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                                 child: Center(
                                   child: Container(
                                     width: deviceSize.width * 0.85,
-                                    height: deviceSize.height * 0.36,
+                                    height: deviceSize.height * 0.26,
                                     decoration: BoxDecoration(
                                       color: CupertinoColors.systemGrey6
                                           .withOpacity(0.85),

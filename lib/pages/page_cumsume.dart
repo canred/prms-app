@@ -583,7 +583,7 @@ class _PageFun1State extends State<PageCunsume> {
                                         child: Flexible(
                                           child: Text(
                                             page_stage == "User"
-                                                ? 'Scan your employee ID .'
+                                                ? 'Scan your employee ID.'
                                                 : page_stage == "Machine"
                                                 ? 'Scan machine\'s barcode.'
                                                 : page_stage == "Old_PR"
@@ -714,14 +714,14 @@ class _PageFun1State extends State<PageCunsume> {
                                           _buildInfoRowStyled(
                                             'New PR Id',
                                             p_new_pr_id,
-                                            CupertinoIcons.drop_fill,
+                                            Icons.science,
                                             color: Color(0xFF1E90FF),
                                           ),
                                           _buildDivider(),
                                           _buildInfoRowStyled(
                                             'Tube Id(2)',
                                             p_new_tube_id,
-                                            CupertinoIcons.arrow_merge,
+                                            CupertinoIcons.tag,
                                             color: Color(0xFF1E90FF),
                                           ),
                                         ],
@@ -744,8 +744,145 @@ class _PageFun1State extends State<PageCunsume> {
                                               () => setState(
                                                 () => _isButtonPressed = false,
                                               ),
-                                          onTap: () {
-                                            // TODO: 在这里处理确认逻辑
+                                          onTap: () async {
+                                            setState(
+                                              () => _isButtonPressed = false,
+                                            );
+                                            await showCupertinoDialog(
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CupertinoAlertDialog(
+                                                    title: Row(
+                                                      children: [
+                                                        Icon(
+                                                          CupertinoIcons
+                                                              .check_mark_circled_solid,
+                                                          color:
+                                                              CupertinoColors
+                                                                  .activeGreen,
+                                                          size: 28,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text('Cumsume'),
+                                                      ],
+                                                    ),
+                                                    content: Text(
+                                                      'Your info has been submitted successfully.',
+                                                    ),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        child: Text('Close'),
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop(); // 先关闭弹窗
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pushAndRemoveUntil(
+                                                            CupertinoPageRoute(
+                                                              builder:
+                                                                  (
+                                                                    context,
+                                                                  ) => MainPage(
+                                                                    title:
+                                                                        'PRMS APP',
+                                                                    initialTabIndex:
+                                                                        0,
+                                                                  ),
+                                                            ),
+                                                            (route) => false,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );
+                                          },
+                                          onDoubleTap: () async {
+                                            setState(
+                                              () => _isButtonPressed = false,
+                                            );
+                                            // 假设你有一个异常信息列表
+                                            List<String> errorMessages = [
+                                              '1：Network error',
+                                              '2：New PR ID mismatch',
+                                              '3：Tube missmatch',
+                                              '4：Mach. Nozzle mismatch',
+                                              // 可以根据实际情况动态生成
+                                            ];
+                                            await showCupertinoDialog(
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CupertinoAlertDialog(
+                                                    title: Row(
+                                                      children: [
+                                                        Icon(
+                                                          CupertinoIcons
+                                                              .exclamationmark_circle_fill,
+                                                          color:
+                                                              CupertinoColors
+                                                                  .systemRed,
+                                                          size: 26,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text('Error'),
+                                                      ],
+                                                    ),
+                                                    content: ConstrainedBox(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                            maxHeight:
+                                                                MediaQuery.of(
+                                                                  context,
+                                                                ).size.height *
+                                                                0.4,
+                                                          ),
+                                                      child: SingleChildScrollView(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children:
+                                                              errorMessages
+                                                                  .map(
+                                                                    (
+                                                                      msg,
+                                                                    ) => Padding(
+                                                                      padding: const EdgeInsets.only(
+                                                                        bottom:
+                                                                            2.0,
+                                                                      ),
+                                                                      child: Text(
+                                                                        msg,
+                                                                        style: TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                  .toList(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        child: Text('Close'),
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop(); // 先关闭弹窗
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );
                                           },
                                           child: AnimatedScale(
                                             scale:

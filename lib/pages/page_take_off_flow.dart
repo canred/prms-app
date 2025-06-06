@@ -419,15 +419,13 @@ class _PageTakeOffFlowState extends State<PageTakeOffFlow> {
                                       Flexible(
                                         child: Text(
                                           page_stage == "User"
-                                              ? 'Scan the barcode on your employee ID card.'
+                                              ? 'Scan your employee ID.'
                                               : page_stage == "Machine"
                                               ? 'Scan the barcode on the machine.'
                                               : page_stage == "Old_PR"
-                                              ? 'Scan the barcode on the old PR Bottle.'
+                                              ? 'Scan barcode on PR bottle.'
                                               : page_stage == "Old_Tube"
-                                              ? 'Scan the barcode on the tuble (pipeline).'
-                                              : page_stage == "Complete"
-                                              ? 'Complete, Below List to confirm.'
+                                              ? 'Scan tube\'s barcode.'
                                               : '',
                                           style: TextStyle(
                                             fontSize: 17,
