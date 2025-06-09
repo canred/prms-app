@@ -1,12 +1,12 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:prmsapp/utility/prms_data_check.dart';
 import 'package:prmsapp/widgets/global_nav_bar.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
-import 'package:flutter/material.dart';
 
 class PageCleanFlow extends StatefulWidget {
   final GlobalKey<GlobalNavBarState>? navBarKey;
@@ -26,17 +26,16 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
     // 不指定formats參數，讓掃描器支援所有類型的條碼
   );
 
-  final Key _scannerVisibilityKey = UniqueKey();
-
   // 分别为5个阶段的处理作业
-  // User , PR , Rack
-  String page_stage = "User"; // User , Machine , Complete
+  // User , Machine , New_PR, New_Tube
+  String page_stage = "User"; // User , Machine  Complete
   //String p_user_id = "220653 / HHCHENX"; // 220653
-  String p_user_id = "";
-  List<String> p_pr = <String>[];
-  String p_rack_id = "";
+  String p_user_id = ""; // 220653
+  String p_machine_id = "";
 
   bool _isButtonPressed = false;
+
+  final Key _scannerVisibilityKey = UniqueKey();
 
   @override
   void initState() {
@@ -55,9 +54,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
   }
 
   checkStage() {
-    if (p_user_id.isNotEmpty &&
-        p_pr[0].trim().isNotEmpty &&
-        p_rack_id.isNotEmpty) {
+    if (p_user_id.isNotEmpty && p_machine_id.isNotEmpty) {
       return true;
     } else {
       return false;
@@ -91,42 +88,19 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
           if (PrmsDataCheck.isValidUserId(scanContent)) {
             setState(() {
               p_user_id = scanContent;
-              page_stage = "PR";
+              page_stage = "Machine";
             });
           }
-        } else if (page_stage == "PR") {
+        } else if (page_stage == "Machine") {
           // 当符合 Machine ID 的格式时，才会更新 p_machine_id
           // 以M開頭+5位數字，可依實際需求調整
-          if (PrmsDataCheck.isValidPrId(scanContent)) {
+          if (PrmsDataCheck.isValidMachineId(scanContent)) {
             setState(() {
-              p_pr.add(scanContent);
-            });
-          }
-        } else if (page_stage == "Rack") {
-          // 当符合 Old PR ID 的格式时，才会更新 p_old_pr_id
-          // PR開頭+6位數字，可依實際需求調整
-          if (PrmsDataCheck.isVaildRackId(scanContent)) {
-            setState(() {
-              p_rack_id = scanContent;
+              p_machine_id = scanContent;
               page_stage = "Complete";
             });
           }
         }
-
-        // 在這裡可以根據需要處理掃描結果，例如顯示對話框或更新畫面
-        // showDialog(
-        //   context: context,
-        //   builder: (context) => CupertinoAlertDialog(
-        //     title: const Text('掃描結果'),
-        //     content: Text(scanContent),
-        //     actions: [
-        //       CupertinoDialogAction(
-        //         child: const Text('確定'),
-        //         onPressed: () => Navigator.of(context).pop(),
-        //       ),
-        //     ],
-        //   ),
-        // );
       }
     }
   }
@@ -217,21 +191,18 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Icon(
-                                          CupertinoIcons.gear_alt_fill,
-                                          size: 16,
+                                        Image.asset(
+                                          'assets/machine.png',
+                                          width: 22,
+                                          height: 22,
                                           color:
                                               page_stage == "Machine"
-                                                  ? Color(
-                                                    0xFF1E90FF,
-                                                  ) // Dodger Blue，代表“新”
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
+                                                  ? CupertinoColors.white
+                                                  : CupertinoColors.activeBlue,
                                         ),
                                       ],
                                     ),
-                                    label: 'Machine',
+                                    label: 'Mach.',
                                     selected: page_stage == "Machine",
                                     onTap: () {
                                       setState(() {
@@ -252,7 +223,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                             ),
                             child: LayoutBuilder(
                               builder: (context, constraints) {
-                                final dashWidth = 1.2; // 更细腻
+                                final dashWidth = 1.5; // 更细腻
                                 final dashSpace = 2.0; // 间距更小
                                 final dashCount =
                                     (constraints.maxWidth /
@@ -265,7 +236,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                     return Container(
                                       width: dashWidth,
                                       height: 1,
-                                      color: const Color(0xFFCCCCCC), // 更浅的灰色
+                                      color: const Color(0xFF888888), // 深一点的灰色
                                     );
                                   }),
                                 );
@@ -297,46 +268,40 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                             color: CupertinoColors.activeBlue,
                                           )
                                           : page_stage == "Machine"
-                                          ? const Icon(
-                                            CupertinoIcons.gear_alt,
-                                            size: 32,
+                                          ? Image.asset(
+                                            'assets/machine.png',
+                                            width: 44,
+                                            height: 44,
                                             color: CupertinoColors.activeBlue,
                                           )
-                                          : page_stage == "PR"
+                                          : page_stage == "New_PR"
                                           ? Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons.drop_fill,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                              SizedBox(width: 2),
-                                              Icon(
-                                                CupertinoIcons.barcode,
+                                                Icons.science,
                                                 size: 28,
                                                 color: Color(0xFF1E90FF),
                                               ),
                                             ],
                                           )
-                                          : page_stage == "Rack"
+                                          : page_stage == "New_Tube"
                                           ? Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                Icons.inventory_2,
+                                                CupertinoIcons.tag,
                                                 size: 28,
                                                 color: Color(0xFF1E90FF),
                                               ),
                                             ],
                                           )
-                                          : page_stage == "Complete"
+                                          : page_stage == "Nozzle"
                                           ? Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons
-                                                    .check_mark_circled_solid,
+                                                CupertinoIcons.arrow_uturn_down,
                                                 size: 28,
                                                 color: Color(0xFF1E90FF),
                                               ),
@@ -344,7 +309,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                           )
                                           : const Icon(
                                             CupertinoIcons.add_circled,
-                                            size: 32,
+                                            size: 0,
                                             color: CupertinoColors.activeBlue,
                                           ),
                                       SizedBox(width: 10),
@@ -354,7 +319,13 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                           page_stage == "User"
                                               ? 'Scan your employee ID.'
                                               : page_stage == "Machine"
-                                              ? 'Scan machine\'s barcode.'
+                                              ? 'Scan the barcode on the machine.'
+                                              : page_stage == "New_PR"
+                                              ? 'Scan barcode on PR bottle.'
+                                              : page_stage == "New_Tube"
+                                              ? 'Scan tube\'s barcode.'
+                                              : page_stage == "Nozzle"
+                                              ? 'Scan nozzle\'s barcode.'
                                               : '',
                                           style: TextStyle(
                                             fontSize: 17,
@@ -373,276 +344,367 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Padding(
-                            padding:
-                                page_stage == "Complete"
-                                    ? EdgeInsets.only(bottom: 0.0)
-                                    : EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              page_stage == "Complete"
-                                  ? ""
-                                  : 'Scan your barcode or QR code in the box.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: const Color.fromARGB(255, 222, 60, 60),
-                              ),
-                            ),
-                          ),
-
-                          // 我要加入 MobileScanner 功能
-                          page_stage == "Complete"
-                              ? Container(
-                                padding: const EdgeInsets.all(16.0),
-                                decoration: BoxDecoration(
-                                  color: CupertinoColors.systemGrey6,
-                                  borderRadius: BorderRadius.circular(12),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: CupertinoColors.systemGrey4
-                                          .withOpacity(0.2),
-                                      blurRadius: 8,
-                                      offset: Offset(0, 2),
-                                    ),
-                                  ],
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'Consume Information',
-                                      style: TextStyle(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w900,
-                                        color: CupertinoColors.activeBlue,
-                                        letterSpacing: 1.2,
-                                        shadows: [
-                                          Shadow(
-                                            color: CupertinoColors.systemGrey
-                                                .withOpacity(0.18),
-                                            offset: Offset(0, 2),
-                                            blurRadius: 4,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 18),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: CupertinoColors.white,
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: CupertinoColors.systemGrey4
-                                                .withOpacity(0.12),
-                                            blurRadius: 8,
-                                            offset: Offset(0, 2),
-                                          ),
-                                        ],
-                                        border: Border.all(
-                                          color: CupertinoColors.systemGrey4,
-                                          width: 0.7,
-                                        ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          _buildInfoRowStyled(
-                                            'User Id',
-                                            p_user_id,
-                                            CupertinoIcons.person,
-                                          ),
-                                          _buildDivider(),
-                                          _buildInfoRowStyled(
-                                            'PR',
-                                            p_pr.join(', '),
-                                            CupertinoIcons.gear_alt,
-                                          ),
-                                          _buildDivider(),
-
-                                          _buildInfoRowStyled(
-                                            'Rack Id',
-                                            p_rack_id,
-                                            CupertinoIcons.drop_fill,
-                                            color: Color(0xFF1E90FF),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    SizedBox(height: 28),
-                                    Center(
-                                      child: SizedBox(
-                                        width: 200,
-                                        child: GestureDetector(
-                                          onTapDown:
-                                              (_) => setState(
-                                                () => _isButtonPressed = true,
-                                              ),
-                                          onTapUp:
-                                              (_) => setState(
-                                                () => _isButtonPressed = false,
-                                              ),
-                                          onTapCancel:
-                                              () => setState(
-                                                () => _isButtonPressed = false,
-                                              ),
-                                          onTap: () {
-                                            // TODO: 在这里处理确认逻辑
-                                          },
-                                          child: AnimatedScale(
-                                            scale:
-                                                _isButtonPressed == true
-                                                    ? 0.96
-                                                    : 1.0,
-                                            duration: Duration(
-                                              milliseconds: 80,
-                                            ),
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                vertical: 14,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color:
-                                                    CupertinoColors.activeBlue,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: CupertinoColors
-                                                        .systemGrey4
-                                                        .withOpacity(0.18),
-                                                    blurRadius: 8,
-                                                    offset: Offset(0, 2),
-                                                  ),
-                                                ],
-                                              ),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    CupertinoIcons
-                                                        .paperplane_fill,
-                                                    color:
-                                                        CupertinoColors.white,
-                                                    size: 32,
-                                                  ),
-                                                  SizedBox(width: 4),
-                                                  Text(
-                                                    'Confrim & Submit',
-                                                    style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color:
-                                                          CupertinoColors.white,
-                                                      letterSpacing: 0.3,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              : VisibilityDetector(
-                                key: _scannerVisibilityKey,
-                                onVisibilityChanged: (visibilityInfo) {
-                                  if (!mounted) return;
-                                  final visibleFraction =
-                                      visibilityInfo.visibleFraction;
-                                  debugPrint(
-                                    'Scanner visibility: \\${visibleFraction * 100}%',
-                                  );
-                                  if (visibleFraction > 0) {
-                                    debugPrint(
-                                      'Scanner is visible, starting camera...',
-                                    );
-                                    _scannerController.start().catchError((
-                                      error,
-                                    ) {
-                                      debugPrint(
-                                        'Error starting camera: \\${error}',
-                                      );
-                                    });
-                                  } else {
-                                    debugPrint(
-                                      'Scanner is not visible, stopping camera...',
-                                    );
-                                    _scannerController.stop();
-                                  }
-                                },
-                                child: Center(
-                                  child: Container(
-                                    width: deviceSize.width * 0.85,
-                                    height: deviceSize.height * 0.36,
-                                    decoration: BoxDecoration(
-                                      color: CupertinoColors.systemGrey6
-                                          .withOpacity(0.85),
-                                      borderRadius: BorderRadius.circular(20),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: CupertinoColors.systemGrey4
-                                              .withOpacity(0.18),
-                                          blurRadius: 16,
-                                          offset: Offset(0, 6),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          child: MobileScanner(
-                                            controller: _scannerController,
-                                            fit: BoxFit.cover,
-                                            onDetect: _handleScan,
-                                          ),
-                                        ),
-                                        // 四角高亮装飾
-                                        Positioned.fill(
-                                          child: CustomPaint(
-                                            painter: _CornerDecorationPainter(),
-                                          ),
-                                        ),
-                                        // 闪光灯按钮
-                                        Positioned(
-                                          top: 14.0,
-                                          left: 14.0,
-                                          child: CupertinoButton(
-                                            padding: const EdgeInsets.all(8.0),
-                                            color: CupertinoColors.black
-                                                .withOpacity(0.32),
-                                            borderRadius: BorderRadius.circular(
-                                              20.0,
-                                            ),
-                                            onPressed:
-                                                () =>
-                                                    _scannerController
-                                                        .toggleTorch(),
-                                            child: Icon(
-                                              CupertinoIcons.bolt_fill,
-                                              size: deviceSize.width * 0.06,
-                                              color: CupertinoColors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                          SizedBox(height: 16),
                         ],
                       ),
                     ),
                   ),
+                  // MobileScanner 区域
+                  if (page_stage != "Complete")
+                    SliverToBoxAdapter(
+                      child: VisibilityDetector(
+                        key: _scannerVisibilityKey,
+                        onVisibilityChanged: (visibilityInfo) {
+                          if (!mounted) return;
+                          final visibleFraction =
+                              visibilityInfo.visibleFraction;
+                          debugPrint(
+                            'Scanner visibility: \\${visibleFraction * 100}%',
+                          );
+                          if (visibleFraction > 0) {
+                            debugPrint(
+                              'Scanner is visible, starting camera...',
+                            );
+                            _scannerController.start().catchError((error) {
+                              debugPrint('Error starting camera: \\${error}');
+                            });
+                          } else {
+                            debugPrint(
+                              'Scanner is not visible, stopping camera...',
+                            );
+                            _scannerController.stop();
+                          }
+                        },
+                        child: Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.85,
+                            height: MediaQuery.of(context).size.height * 0.36,
+                            decoration: BoxDecoration(
+                              color: CupertinoColors.systemGrey6.withOpacity(
+                                0.85,
+                              ),
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: CupertinoColors.systemGrey4
+                                      .withOpacity(0.18),
+                                  blurRadius: 16,
+                                  offset: Offset(0, 6),
+                                ),
+                              ],
+                            ),
+                            child: Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: MobileScanner(
+                                    controller: _scannerController,
+                                    fit: BoxFit.cover,
+                                    onDetect: _handleScan,
+                                  ),
+                                ),
+                                // 四角高亮装饰
+                                Positioned.fill(
+                                  child: CustomPaint(
+                                    painter: _CornerDecorationPainter(),
+                                  ),
+                                ),
+                                // 闪光灯按钮
+                                Positioned(
+                                  top: 14.0,
+                                  left: 14.0,
+                                  child: CupertinoButton(
+                                    padding: const EdgeInsets.all(8.0),
+                                    color: CupertinoColors.black.withOpacity(
+                                      0.32,
+                                    ),
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    onPressed:
+                                        () => _scannerController.toggleTorch(),
+                                    child: Icon(
+                                      CupertinoIcons.bolt_fill,
+                                      size:
+                                          MediaQuery.of(context).size.width *
+                                          0.06,
+                                      color: CupertinoColors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  // page_stage == Complete 时的内容
+                  if (page_stage == "Complete")
+                    SliverToBoxAdapter(
+                      child: Container(
+                        padding: const EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: CupertinoColors.systemGrey6,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: CupertinoColors.systemGrey4.withOpacity(
+                                0.2,
+                              ),
+                              blurRadius: 8,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Clean Flow Information',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w900,
+                                color: CupertinoColors.activeBlue,
+                                letterSpacing: 1.2,
+                                shadows: [
+                                  Shadow(
+                                    color: CupertinoColors.systemGrey
+                                        .withOpacity(0.18),
+                                    offset: Offset(0, 2),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 18),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: CupertinoColors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: CupertinoColors.systemGrey4
+                                        .withOpacity(0.12),
+                                    blurRadius: 8,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                                border: Border.all(
+                                  color: CupertinoColors.systemGrey4,
+                                  width: 0.7,
+                                ),
+                              ),
+                              child: Column(
+                                children: [
+                                  _buildInfoRowStyled(
+                                    'User Id',
+                                    p_user_id,
+                                    CupertinoIcons.person,
+                                  ),
+                                  _buildDivider(),
+                                  _buildInfoRowStyled(
+                                    'Machine Id',
+                                    p_machine_id,
+                                    Icons.circle, // 传任意合法IconData避免类型错误
+                                    iconWidget: Image.asset(
+                                      'assets/machine.png',
+                                      width: 24,
+                                      height: 24,
+                                      color: CupertinoColors.activeBlue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 28),
+                            Center(
+                              child: SizedBox(
+                                width: 200,
+                                child: GestureDetector(
+                                  onTapDown:
+                                      (_) => setState(
+                                        () => _isButtonPressed = true,
+                                      ),
+                                  onTapUp:
+                                      (_) => setState(
+                                        () => _isButtonPressed = false,
+                                      ),
+                                  onTapCancel:
+                                      () => setState(
+                                        () => _isButtonPressed = false,
+                                      ),
+                                  onTap: () async {
+                                    setState(() => _isButtonPressed = false);
+                                    await showCupertinoDialog(
+                                      context: context,
+                                      builder:
+                                          (context) => CupertinoAlertDialog(
+                                            title: Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .check_mark_circled_solid,
+                                                  color:
+                                                      CupertinoColors
+                                                          .activeGreen,
+                                                  size: 28,
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text('Clean Flow'),
+                                              ],
+                                            ),
+                                            content: Text(
+                                              'Your info has been submitted successfully.',
+                                            ),
+                                            actions: [
+                                              CupertinoDialogAction(
+                                                child: Text('Close'),
+                                                onPressed: () {
+                                                  Navigator.of(
+                                                    context,
+                                                  ).pop(); // 先关闭弹窗
+                                                  Navigator.of(
+                                                    context,
+                                                  ).pushAndRemoveUntil(
+                                                    CupertinoPageRoute(
+                                                      builder:
+                                                          (context) => MainPage(
+                                                            title: 'PRMS APP',
+                                                            initialTabIndex: 0,
+                                                          ),
+                                                    ),
+                                                    (route) => false,
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                    );
+                                  },
+                                  onDoubleTap: () async {
+                                    setState(() => _isButtonPressed = false);
+                                    // 假设你有一个异常信息列表
+                                    List<String> errorMessages = [
+                                      '1：Network error',
+                                      '2：New PR ID mismatch',
+                                      '3：Tube missmatch',
+                                      '4：Mach. Nozzle mismatch',
+                                      // 可以根据实际情况动态生成
+                                    ];
+                                    await showCupertinoDialog(
+                                      context: context,
+                                      builder:
+                                          (context) => CupertinoAlertDialog(
+                                            title: Row(
+                                              children: [
+                                                Icon(
+                                                  CupertinoIcons
+                                                      .exclamationmark_circle_fill,
+                                                  color:
+                                                      CupertinoColors.systemRed,
+                                                  size: 26,
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text('Error'),
+                                              ],
+                                            ),
+                                            content: ConstrainedBox(
+                                              constraints: BoxConstraints(
+                                                maxHeight:
+                                                    MediaQuery.of(
+                                                      context,
+                                                    ).size.height *
+                                                    0.4,
+                                              ),
+                                              child: SingleChildScrollView(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children:
+                                                      errorMessages
+                                                          .map(
+                                                            (msg) => Padding(
+                                                              padding:
+                                                                  const EdgeInsets.only(
+                                                                    bottom: 2.0,
+                                                                  ),
+                                                              child: Text(
+                                                                msg,
+                                                                style:
+                                                                    TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                    ),
+                                                              ),
+                                                            ),
+                                                          )
+                                                          .toList(),
+                                                ),
+                                              ),
+                                            ),
+                                            actions: [
+                                              CupertinoDialogAction(
+                                                child: Text('Close'),
+                                                onPressed: () {
+                                                  Navigator.of(
+                                                    context,
+                                                  ).pop(); // 先关闭弹窗
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                    );
+                                  },
+                                  child: AnimatedScale(
+                                    scale:
+                                        _isButtonPressed == true ? 0.96 : 1.0,
+                                    duration: Duration(milliseconds: 80),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 14,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: CupertinoColors.activeBlue,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: CupertinoColors.systemGrey4
+                                                .withOpacity(0.18),
+                                            blurRadius: 8,
+                                            offset: Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            CupertinoIcons.paperplane_fill,
+                                            color: CupertinoColors.white,
+                                            size: 32,
+                                          ),
+                                          SizedBox(width: 4),
+                                          Text(
+                                            'Confrim & Submit',
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: CupertinoColors.white,
+                                              letterSpacing: 0.3,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Align(
@@ -733,20 +795,29 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
     );
   }
 
-  // 新增表单行构建方法
-
   // 專業iOS表單行（帶圖標與顏色）
   Widget _buildInfoRowStyled(
     String label,
     String value,
-    IconData icon, {
+    IconData? icon, {
     Color? color,
+    Widget? iconWidget,
+    Image? img, // 新增参数
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
       child: Row(
         children: [
-          Icon(icon, size: 22, color: color ?? CupertinoColors.systemGrey),
+          iconWidget ??
+              (icon != null
+                  ? Icon(
+                    icon,
+                    size: 22,
+                    color: color ?? CupertinoColors.systemGrey,
+                  )
+                  : (img != null
+                      ? SizedBox(width: 22, height: 22, child: img)
+                      : SizedBox(width: 22, height: 22))),
           SizedBox(width: 10),
           SizedBox(
             width: 110,
@@ -790,10 +861,8 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
     String info = '';
     if (page_stage == "User" && p_user_id.isNotEmpty) {
       info = 'User Id : ' + p_user_id;
-    } else if (page_stage == "PR" && p_pr.isNotEmpty) {
-      info = 'PR : ' + p_pr.join(', ');
-    } else if (page_stage == "Rack" && p_rack_id.isNotEmpty) {
-      info = 'Rack : ' + p_rack_id;
+    } else if (page_stage == "Machine" && p_machine_id.isNotEmpty) {
+      info = 'Machine Id : ' + p_machine_id;
     }
     if (info.isEmpty) return const SizedBox.shrink();
     return Text(
