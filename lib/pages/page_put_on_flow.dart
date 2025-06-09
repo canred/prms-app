@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:prmsapp/utility/prms_data_check.dart';
 import 'package:prmsapp/widgets/global_nav_bar.dart';
@@ -27,13 +28,13 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
   // 分别为5个阶段的处理作业
   // User , Machine , New_PR, New_Tube
   String page_stage =
-      "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube , Complete
+      "User"; // User , Machine , New_PR , New_Tube , Nozzle , Complete
   //String p_user_id = "220653 / HHCHENX"; // 220653
   String p_user_id = ""; // 220653
   String p_machine_id = "";
-
   String p_new_pr_id = "";
   String p_new_tube_id = "";
+  String p_nozzle_id = "";
 
   bool _isButtonPressed = false;
 
@@ -100,7 +101,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
           if (PrmsDataCheck.isValidMachineId(scanContent)) {
             setState(() {
               p_machine_id = scanContent;
-              page_stage = "Old_PR";
+              page_stage = "New_PR";
             });
           }
         } else if (page_stage == "New_PR") {
@@ -118,6 +119,15 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
           if (PrmsDataCheck.isValidTubeId(scanContent)) {
             setState(() {
               p_new_tube_id = scanContent;
+              page_stage = "Nozzle";
+            });
+          }
+        } else if (page_stage == "Nozzle") {
+          // 当符合 New Tube ID 的格式时，才会更新 p_old_pr_id
+          // TUBE開頭+6位數字，可依實際需求調整
+          if (PrmsDataCheck.isValidNozzleId(scanContent)) {
+            setState(() {
+              p_nozzle_id = scanContent;
               page_stage = "Complete";
             });
           }
@@ -223,10 +233,22 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                   ),
                                   _buildStageButton(
                                     context,
-                                    icon:
-                                        CupertinoIcons
-                                            .gear_big, // 更贴合“机台/生产设备”的图标
-                                    label: 'Machine',
+                                    iconWidget: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'assets/machine.png',
+                                          width: 22,
+                                          height: 22,
+                                          color:
+                                              page_stage == "Machine"
+                                                  ? CupertinoColors.white
+                                                  : CupertinoColors.activeBlue,
+                                        ),
+                                      ],
+                                    ),
+                                    label: 'Mach.',
                                     selected: page_stage == "Machine",
                                     onTap: () {
                                       setState(() {
@@ -242,7 +264,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                           MainAxisAlignment.center,
                                       children: [
                                         Icon(
-                                          CupertinoIcons.drop_fill,
+                                          Icons.science,
                                           size: 16,
                                           color:
                                               page_stage == "New_PR"
@@ -253,20 +275,9 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                                     0xFF1E90FF,
                                                   ).withOpacity(0.7),
                                         ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          CupertinoIcons.barcode,
-                                          size: 16,
-                                          color:
-                                              page_stage == "New_PR"
-                                                  ? Color(0xFF1E90FF) // 同上
-                                                  : Color(
-                                                    0xFF1E90FF,
-                                                  ).withOpacity(0.7),
-                                        ),
                                       ],
                                     ),
-                                    label: 'New PR',
+                                    label: 'PR',
                                     selected: page_stage == "New_PR",
                                     onTap: () {
                                       setState(() {
@@ -284,7 +295,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                           MainAxisSize.min, // 修正按钮内容宽度
                                       children: [
                                         Icon(
-                                          CupertinoIcons.arrow_merge,
+                                          CupertinoIcons.tag,
                                           size: 16,
                                           color:
                                               page_stage == "New_Tube"
@@ -295,24 +306,44 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                                     0xFF1E90FF,
                                                   ).withOpacity(0.7),
                                         ),
-                                        SizedBox(width: 2),
+                                      ],
+                                    ),
+                                    label: 'Tube',
+                                    selected: page_stage == "New_Tube",
+                                    onTap: () {
+                                      setState(() {
+                                        page_stage = "New_Tube";
+                                      });
+                                    },
+                                    height: 56,
+                                  ),
+                                  _buildStageButton(
+                                    context,
+                                    iconWidget: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      mainAxisSize:
+                                          MainAxisSize.min, // 修正按钮内容宽度
+                                      children: [
                                         Icon(
-                                          CupertinoIcons.barcode,
+                                          CupertinoIcons.arrow_uturn_down,
                                           size: 16,
                                           color:
-                                              page_stage == "New_Tube"
-                                                  ? Color(0xFF1E90FF) // 同上
+                                              page_stage == "Nozzle"
+                                                  ? Color(
+                                                    0xFF1E90FF,
+                                                  ) // Dodger Blue，代表“新”
                                                   : Color(
                                                     0xFF1E90FF,
                                                   ).withOpacity(0.7),
                                         ),
                                       ],
                                     ),
-                                    label: 'New Tube',
-                                    selected: page_stage == "New_Tube",
+                                    label: 'Nozzle',
+                                    selected: page_stage == "Nozzle",
                                     onTap: () {
                                       setState(() {
-                                        page_stage = "New_Tube";
+                                        page_stage = "Nozzle";
                                       });
                                     },
                                     height: 56,
@@ -374,9 +405,10 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                             color: CupertinoColors.activeBlue,
                                           )
                                           : page_stage == "Machine"
-                                          ? const Icon(
-                                            CupertinoIcons.gear_alt,
-                                            size: 32,
+                                          ? Image.asset(
+                                            'assets/machine.png',
+                                            width: 44,
+                                            height: 44,
                                             color: CupertinoColors.activeBlue,
                                           )
                                           : page_stage == "New_PR"
@@ -384,13 +416,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons.drop_fill,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                              SizedBox(width: 2),
-                                              Icon(
-                                                CupertinoIcons.barcode,
+                                                Icons.science,
                                                 size: 28,
                                                 color: Color(0xFF1E90FF),
                                               ),
@@ -401,25 +427,18 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons.arrow_merge,
-                                                size: 28,
-                                                color: Color(0xFF1E90FF),
-                                              ),
-                                              SizedBox(width: 2),
-                                              Icon(
-                                                CupertinoIcons.barcode,
+                                                CupertinoIcons.tag,
                                                 size: 28,
                                                 color: Color(0xFF1E90FF),
                                               ),
                                             ],
                                           )
-                                          : page_stage == "Complete"
+                                          : page_stage == "Nozzle"
                                           ? Row(
                                             mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Icon(
-                                                CupertinoIcons
-                                                    .check_mark_circled_solid,
+                                                CupertinoIcons.arrow_uturn_down,
                                                 size: 28,
                                                 color: Color(0xFF1E90FF),
                                               ),
@@ -427,7 +446,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                           )
                                           : const Icon(
                                             CupertinoIcons.add_circled,
-                                            size: 32,
+                                            size: 0,
                                             color: CupertinoColors.activeBlue,
                                           ),
                                       SizedBox(width: 10),
@@ -442,6 +461,8 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                               ? 'Scan barcode on PR bottle.'
                                               : page_stage == "New_Tube"
                                               ? 'Scan tube\'s barcode.'
+                                              : page_stage == "Nozzle"
+                                              ? 'Scan nozzle\'s barcode.'
                                               : '',
                                           style: TextStyle(
                                             fontSize: 17,
@@ -460,22 +481,6 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Padding(
-                            padding:
-                                page_stage == "Complete"
-                                    ? EdgeInsets.only(bottom: 0.0)
-                                    : EdgeInsets.only(bottom: 8.0),
-                            child: Text(
-                              page_stage == "Complete"
-                                  ? ""
-                                  : 'Scan your barcode or QR code in the box.',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: const Color.fromARGB(255, 222, 60, 60),
-                              ),
-                            ),
-                          ),
 
                           // 我要加入 MobileScanner 功能
                           page_stage == "Complete"
@@ -497,7 +502,7 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Consume Information',
+                                      'Put On Flow Information',
                                       style: TextStyle(
                                         fontSize: 22,
                                         fontWeight: FontWeight.w900,
@@ -542,21 +547,34 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                           _buildInfoRowStyled(
                                             'Machine Id',
                                             p_machine_id,
-                                            CupertinoIcons.gear_alt,
+                                            Icons.circle, // 传任意合法IconData避免类型错误
+                                            iconWidget: Image.asset(
+                                              'assets/machine.png',
+                                              width: 24,
+                                              height: 24,
+                                              color: CupertinoColors.activeBlue,
+                                            ),
                                           ),
                                           _buildDivider(),
 
                                           _buildInfoRowStyled(
-                                            'New PR Id',
+                                            'PR Id',
                                             p_new_pr_id,
-                                            CupertinoIcons.drop_fill,
+                                            Icons.science,
                                             color: Color(0xFF1E90FF),
                                           ),
                                           _buildDivider(),
                                           _buildInfoRowStyled(
-                                            'New Tube Id',
+                                            'Tube Id',
                                             p_new_tube_id,
-                                            CupertinoIcons.arrow_merge,
+                                            CupertinoIcons.tag,
+                                            color: Color(0xFF1E90FF),
+                                          ),
+                                          _buildDivider(),
+                                          _buildInfoRowStyled(
+                                            'Nozzle Id',
+                                            p_nozzle_id,
+                                            CupertinoIcons.arrow_uturn_down,
                                             color: Color(0xFF1E90FF),
                                           ),
                                         ],
@@ -579,8 +597,145 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                               () => setState(
                                                 () => _isButtonPressed = false,
                                               ),
-                                          onTap: () {
-                                            // TODO: 在这里处理确认逻辑
+                                          onTap: () async {
+                                            setState(
+                                              () => _isButtonPressed = false,
+                                            );
+                                            await showCupertinoDialog(
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CupertinoAlertDialog(
+                                                    title: Row(
+                                                      children: [
+                                                        Icon(
+                                                          CupertinoIcons
+                                                              .check_mark_circled_solid,
+                                                          color:
+                                                              CupertinoColors
+                                                                  .activeGreen,
+                                                          size: 28,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text('Cumsume'),
+                                                      ],
+                                                    ),
+                                                    content: Text(
+                                                      'Your info has been submitted successfully.',
+                                                    ),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        child: Text('Close'),
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop(); // 先关闭弹窗
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pushAndRemoveUntil(
+                                                            CupertinoPageRoute(
+                                                              builder:
+                                                                  (
+                                                                    context,
+                                                                  ) => MainPage(
+                                                                    title:
+                                                                        'PRMS APP',
+                                                                    initialTabIndex:
+                                                                        0,
+                                                                  ),
+                                                            ),
+                                                            (route) => false,
+                                                          );
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );
+                                          },
+                                          onDoubleTap: () async {
+                                            setState(
+                                              () => _isButtonPressed = false,
+                                            );
+                                            // 假设你有一个异常信息列表
+                                            List<String> errorMessages = [
+                                              '1：Network error',
+                                              '2：New PR ID mismatch',
+                                              '3：Tube missmatch',
+                                              '4：Mach. Nozzle mismatch',
+                                              // 可以根据实际情况动态生成
+                                            ];
+                                            await showCupertinoDialog(
+                                              context: context,
+                                              builder:
+                                                  (
+                                                    context,
+                                                  ) => CupertinoAlertDialog(
+                                                    title: Row(
+                                                      children: [
+                                                        Icon(
+                                                          CupertinoIcons
+                                                              .exclamationmark_circle_fill,
+                                                          color:
+                                                              CupertinoColors
+                                                                  .systemRed,
+                                                          size: 26,
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Text('Error'),
+                                                      ],
+                                                    ),
+                                                    content: ConstrainedBox(
+                                                      constraints:
+                                                          BoxConstraints(
+                                                            maxHeight:
+                                                                MediaQuery.of(
+                                                                  context,
+                                                                ).size.height *
+                                                                0.4,
+                                                          ),
+                                                      child: SingleChildScrollView(
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children:
+                                                              errorMessages
+                                                                  .map(
+                                                                    (
+                                                                      msg,
+                                                                    ) => Padding(
+                                                                      padding: const EdgeInsets.only(
+                                                                        bottom:
+                                                                            2.0,
+                                                                      ),
+                                                                      child: Text(
+                                                                        msg,
+                                                                        style: TextStyle(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
+                                                                  .toList(),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    actions: [
+                                                      CupertinoDialogAction(
+                                                        child: Text('Close'),
+                                                        onPressed: () {
+                                                          Navigator.of(
+                                                            context,
+                                                          ).pop(); // 先关闭弹窗
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                            );
                                           },
                                           child: AnimatedScale(
                                             scale:
@@ -801,14 +956,25 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
   Widget _buildInfoRowStyled(
     String label,
     String value,
-    IconData icon, {
+    IconData? icon, {
     Color? color,
+    Widget? iconWidget,
+    Image? img, // 新增参数
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
       child: Row(
         children: [
-          Icon(icon, size: 22, color: color ?? CupertinoColors.systemGrey),
+          iconWidget ??
+              (icon != null
+                  ? Icon(
+                    icon,
+                    size: 22,
+                    color: color ?? CupertinoColors.systemGrey,
+                  )
+                  : (img != null
+                      ? SizedBox(width: 22, height: 22, child: img)
+                      : SizedBox(width: 22, height: 22))),
           SizedBox(width: 10),
           SizedBox(
             width: 110,
