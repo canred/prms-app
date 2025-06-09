@@ -31,7 +31,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
   // 分别为5个阶段的处理作业
   // User , PR , Rack
   String page_stage =
-      "Complete"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube , Complete
+      "User"; // User , Machine , Old_PR , Old_Tube , New_PR, New_Tube , Complete
   //String p_user_id = "220653 / HHCHENX"; // 220653
   String p_user_id = "";
   List<String> p_pr = <String>[];
@@ -100,7 +100,9 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
           // 以M開頭+5位數字，可依實際需求調整
           if (PrmsDataCheck.isValidPrId(scanContent)) {
             setState(() {
-              p_pr.add(scanContent);
+              if (!p_pr.contains(scanContent)) {
+                p_pr.add(scanContent);
+              }
             });
           }
         } else if (page_stage == "Rack") {

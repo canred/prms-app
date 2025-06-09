@@ -101,7 +101,10 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
           // 以M開頭+5位數字，可依實際需求調整
           if (PrmsDataCheck.isValidPrId(scanContent)) {
             setState(() {
-              p_pr.add(scanContent);
+              // 如果 p_pr 已经包含了这个 PR ID，则不再添加
+              if (!p_pr.contains(scanContent)) {
+                p_pr.add(scanContent);
+              }
             });
           }
         } else if (page_stage == "Rack") {
