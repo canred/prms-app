@@ -409,7 +409,7 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                     painter: _CornerDecorationPainter(),
                                   ),
                                 ),
-                                // 闪光灯按钮
+                                // 摄像头切换按钮
                                 Positioned(
                                   top: 14.0,
                                   left: 14.0,
@@ -420,9 +420,9 @@ class _PageCleanFlowState extends State<PageCleanFlow> {
                                     ),
                                     borderRadius: BorderRadius.circular(20.0),
                                     onPressed:
-                                        () => _scannerController.toggleTorch(),
+                                        () => _scannerController.switchCamera(),
                                     child: Icon(
-                                      CupertinoIcons.bolt_fill,
+                                      CupertinoIcons.camera_rotate,
                                       size:
                                           MediaQuery.of(context).size.width *
                                           0.06,

@@ -549,23 +549,20 @@ class _PagePutOnFlowState extends State<PagePutOnFlow> {
                                     painter: _CornerDecorationPainter(),
                                   ),
                                 ),
-                                // 闪光灯按钮
                                 Positioned(
-                                  top: 14.0,
-                                  left: 14.0,
+                                  top: 16.0,
+                                  left: 16.0,
                                   child: CupertinoButton(
                                     padding: const EdgeInsets.all(8.0),
                                     color: CupertinoColors.black.withOpacity(
-                                      0.32,
+                                      0.5,
                                     ),
                                     borderRadius: BorderRadius.circular(20.0),
                                     onPressed:
-                                        () => _scannerController.toggleTorch(),
+                                        () => _scannerController.switchCamera(),
                                     child: Icon(
-                                      CupertinoIcons.bolt_fill,
-                                      size:
-                                          MediaQuery.of(context).size.width *
-                                          0.06,
+                                      CupertinoIcons.camera_rotate,
+                                      size: deviceSize.width * 0.06,
                                       color: CupertinoColors.white,
                                     ),
                                   ),

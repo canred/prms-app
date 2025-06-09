@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
 import 'package:prmsapp/utility/prms_data_check.dart';
 import 'package:prmsapp/widgets/global_nav_bar.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -100,6 +101,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
           // 以M開頭+5位數字，可依實際需求調整
           if (PrmsDataCheck.isValidPrId(scanContent)) {
             setState(() {
+              // 如果 p_pr 已经包含了这个 PR ID，则不再添加
               if (!p_pr.contains(scanContent)) {
                 p_pr.add(scanContent);
               }
@@ -222,7 +224,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                       children: [
                                         Icon(
                                           Icons.science,
-
+                                          //size: 28,
                                           color:
                                               page_stage == "PR"
                                                   ? Color(
@@ -251,7 +253,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                       children: [
                                         Icon(
                                           Icons.inventory_2,
-
+                                          //size: 28,
                                           color:
                                               page_stage == "Rack"
                                                   ? Color(0xFF1E90FF) // 同上
@@ -265,6 +267,32 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                     selected: page_stage == "Rack",
                                     onTap: () {
                                       setState(() {
+                                        if (p_pr.isEmpty) {
+                                          // 如果 p_pr 为空，提示用户先扫描 PR
+                                          showCupertinoDialog(
+                                            context: context,
+                                            builder:
+                                                (
+                                                  context,
+                                                ) => CupertinoAlertDialog(
+                                                  title: const Text('Warning'),
+                                                  content: const Text(
+                                                    'Please scan at least one PR before moving in the rack.',
+                                                  ),
+                                                  actions: [
+                                                    CupertinoDialogAction(
+                                                      child: const Text('OK'),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                        ).pop();
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                          );
+                                          return;
+                                        }
                                         page_stage = "Rack";
                                       });
                                     },
@@ -353,12 +381,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                             : const Icon(
                                               CupertinoIcons.add_circled,
                                               size: 0,
-                                              color: Color.fromARGB(
-                                                255,
-                                                255,
-                                                0,
-                                                76,
-                                              ),
+                                              color: CupertinoColors.activeBlue,
                                             ),
                                         SizedBox(width: 10),
                                         // 阶段提示语
@@ -409,9 +432,9 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Move Out Rack Details',
+                                      'Move Out Rack Information',
                                       style: TextStyle(
-                                        fontSize: 22,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.w900,
                                         color: CupertinoColors.activeBlue,
                                         letterSpacing: 1.2,
@@ -464,7 +487,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                             'Rack Id',
                                             p_rack_id,
                                             Icons.inventory_2,
-                                            color: Color(0xFF1E90FF),
+                                            color: CupertinoColors.activeBlue,
                                           ),
                                         ],
                                       ),
@@ -770,7 +793,7 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                             alignment: Alignment.bottomRight,
                                           ),
                                         ),
-                                        // 闪光灯按钮
+                                        // 摄像头切换按钮
                                         Positioned(
                                           top: 16.0,
                                           left: 16.0,
@@ -784,9 +807,9 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                             onPressed:
                                                 () =>
                                                     _scannerController
-                                                        .toggleTorch(),
+                                                        .switchCamera(),
                                             child: Icon(
-                                              CupertinoIcons.bolt_fill,
+                                              CupertinoIcons.camera_rotate,
                                               size: deviceSize.width * 0.06,
                                               color: CupertinoColors.white,
                                             ),
@@ -797,7 +820,6 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                                   ),
                                 ),
                               ),
-                          SizedBox(height: 16),
                         ],
                       ),
                     ),
@@ -809,8 +831,8 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
                       child: Padding(
                         padding: EdgeInsets.only(
                           bottom: 16.0,
-                          left: screenWidth * 0.1,
-                          right: screenWidth * 0.1,
+                          //left: screenWidth * 0.1,
+                          //right: screenWidth * 0.1,
                         ),
                         child: _buildBottomInfo(),
                       ),
@@ -896,35 +918,28 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
   Widget _buildInfoRowStyled(
     String label,
     String value,
-    IconData icon, {
+    IconData? icon, { // Change IconData to IconData?
     Color? color,
+    TextAlign textAlign = TextAlign.right, // Default to right alignment
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
       child: Row(
         children: [
-          Icon(icon, size: 22, color: color ?? CupertinoColors.systemGrey),
-          SizedBox(width: 10),
-          SizedBox(
-            width: 110,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: CupertinoColors.systemGrey,
-                fontWeight: FontWeight.w500,
-                fontSize: 15,
-              ),
-            ),
-          ),
+          if (icon != null) // Add condition to check if icon is not null
+            Icon(icon, size: 22, color: color ?? CupertinoColors.systemGrey),
+          if (icon != null)
+            SizedBox(width: 10), // Add spacing only if icon is present
+
           Expanded(
             child: Text(
-              value,
+              label + "  :  " + value,
               style: TextStyle(
                 color: CupertinoColors.label,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
-              textAlign: TextAlign.right,
+              textAlign: textAlign, // Use the textAlign parameter
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -944,21 +959,91 @@ class _PageMoveOutRackState extends State<PageMoveOutRack> {
 
   // 优化底部信息显示，减少重复判断
   Widget _buildBottomInfo() {
+    if (page_stage == "PR" && p_pr.isNotEmpty) {
+      //var height = p_pr.length * 60.0; // 每个PR占用60像素高度
+      var height = 200.0; // 默认高度
+      if (p_pr.length <= 3) {
+        // 如果PR数量超过3个，设置固定高度
+        height = 200.0; // 固定高度
+      } else {
+        height = p_pr.length * 60.0;
+      }
+      return SizedBox(
+        height: height, // Fixed height, not dependent on p_pr size
+        child: Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12.0,
+                  vertical: 8.0,
+                ),
+                child: Text(
+                  'Scanned PR  (${p_pr.length})',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: CupertinoColors.black,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: p_pr.length,
+                itemBuilder: (context, idx) {
+                  return Dismissible(
+                    key: ValueKey(p_pr[idx]),
+                    direction: DismissDirection.endToStart,
+                    onDismissed: (direction) {
+                      setState(() {
+                        p_pr.removeAt(idx);
+                      });
+                    },
+                    background: Container(
+                      color: CupertinoColors.destructiveRed,
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Icon(Icons.delete, color: CupertinoColors.white),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildInfoRowStyled(
+                          'No' + ' ${idx + 1}',
+                          p_pr[idx],
+                          null,
+                          color: CupertinoColors.activeBlue,
+                          textAlign: TextAlign.left, // Align text to the left
+                        ),
+                        if (idx != p_pr.length - 1) _buildDivider(),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     String info = '';
     if (page_stage == "User" && p_user_id.isNotEmpty) {
       info = 'User Id : ' + p_user_id;
-    } else if (page_stage == "PR" && p_pr.isNotEmpty) {
-      info = 'PR : ' + p_pr.join(', ');
     } else if (page_stage == "Rack" && p_rack_id.isNotEmpty) {
       info = 'Rack : ' + p_rack_id;
     }
+
     if (info.isEmpty) return const SizedBox.shrink();
     return Text(
       info,
       style: const TextStyle(
-        color: Color(0xFF204080), // 柔和蓝色
-        fontSize: 20.0, // 更大
-        fontWeight: FontWeight.w600, // 半粗体
+        color: Color(0xFF204080),
+        fontSize: 20.0,
+        fontWeight: FontWeight.w600,
         letterSpacing: 0.5,
         shadows: [
           Shadow(color: Color(0x22000000), offset: Offset(0, 1), blurRadius: 2),

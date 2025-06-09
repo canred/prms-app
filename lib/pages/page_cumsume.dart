@@ -1040,12 +1040,10 @@ class _PageFun1State extends State<PageCunsume> {
                                             borderRadius: BorderRadius.circular(
                                               20.0,
                                             ),
-                                            onPressed:
-                                                () =>
-                                                    _scannerController
-                                                        .toggleTorch(),
+                                            onPressed: () => _scannerController
+                                                .switchCamera(),
                                             child: Icon(
-                                              CupertinoIcons.bolt_fill,
+                                              CupertinoIcons.camera_rotate,
                                               size: deviceSize.width * 0.06,
                                               color: CupertinoColors.white,
                                             ),

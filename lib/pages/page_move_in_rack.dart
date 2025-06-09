@@ -793,7 +793,7 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                                             alignment: Alignment.bottomRight,
                                           ),
                                         ),
-                                        // 闪光灯按钮
+                                        // 摄像头切换按钮
                                         Positioned(
                                           top: 16.0,
                                           left: 16.0,
@@ -807,9 +807,9 @@ class _PageMoveInRackState extends State<PageMoveInRack> {
                                             onPressed:
                                                 () =>
                                                     _scannerController
-                                                        .toggleTorch(),
+                                                        .switchCamera(),
                                             child: Icon(
-                                              CupertinoIcons.bolt_fill,
+                                              CupertinoIcons.camera_rotate,
                                               size: deviceSize.width * 0.06,
                                               color: CupertinoColors.white,
                                             ),
