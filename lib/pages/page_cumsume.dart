@@ -131,10 +131,27 @@ class _PageFun1State extends State<PageCunsume> {
             // 如果匹配失败，弹出对话框提示
             _scannerController.stop();
 
+            // 显示 Loading 对话框
+            showCupertinoDialog(
+              context: context,
+              builder: (context) {
+                return CupertinoAlertDialog(
+                  title: Row(
+                    children: [
+                      CupertinoActivityIndicator(),
+                      SizedBox(width: 8),
+                      const Text('Processing...'),
+                    ],
+                  ),
+                );
+              },
+            );
+
             var isMatch = await PrmsApi.checkPrAndTubeMatch(
               p_old_pr_id,
               p_old_tube_id,
             );
+
             if (isMatch == false) {
               setState(() {
                 p_old_tube_id = scanContent;
@@ -171,8 +188,11 @@ class _PageFun1State extends State<PageCunsume> {
                           setState(() {
                             _isPaused = false;
                           });
-                          _scannerController.start();
+
                           Navigator.of(context).pop();
+                          // 关闭 Loading 对话框
+                          Navigator.of(context).pop();
+                          _scannerController.start();
                         },
                       ),
                     ],
