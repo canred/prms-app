@@ -8,6 +8,9 @@ class PrmsApi {
   static Future<bool> checkPrAndTubeMatch(String prId, String tubeId) async {
     final url = Uri.parse('https://i-services.info/wordpress/?p=14260');
     try {
+      // 模拟网络慢的现象，延迟3秒
+      await Future.delayed(Duration(seconds: 3));
+
       final httpClient = HttpClient();
       httpClient.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;

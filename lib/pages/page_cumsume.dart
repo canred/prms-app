@@ -40,6 +40,7 @@ class _PageFun1State extends State<PageCunsume> {
   String p_new_tube_id = "";
 
   bool _isButtonPressed = false;
+  bool _isPaused = false; // 添加暂停状态变量
   @override
   void initState() {
     super.initState();
@@ -72,6 +73,10 @@ class _PageFun1State extends State<PageCunsume> {
 
   /// 處理掃描結果，支援單次與連續模式，並彈出對話框或更新畫面
   void _handleScan(BarcodeCapture barcodes) async {
+    if (_isPaused) {
+      debugPrint('操作已暂停，忽略本次扫描');
+      return;
+    }
     // 加入冷卻時間判斷，避免因為相機畫面殘影、手抖、或多條碼同時入鏡時，短時間內重複觸發掃描
     // final now = DateTime.now();
     // if (_lastScanTime != null &&
@@ -124,6 +129,7 @@ class _PageFun1State extends State<PageCunsume> {
           if (PrmsDataCheck.isValidTubeId(scanContent)) {
             // 在这个阶段需要在 api 检查 p_old_pr_id 和 p_old_tube_id 是否匹配
             // 如果匹配失败，弹出对话框提示
+            _scannerController.stop();
 
             var isMatch = await PrmsApi.checkPrAndTubeMatch(
               p_old_pr_id,
@@ -138,32 +144,40 @@ class _PageFun1State extends State<PageCunsume> {
               setState(() {
                 p_old_tube_id = "";
                 page_stage = "Old_Tube";
+                _isPaused = true;
               });
               showCupertinoDialog(
                 context: context,
-                builder:
-                    (context) => CupertinoAlertDialog(
-                      title: Row(
-                        children: [
-                          Icon(
-                            CupertinoIcons.exclamationmark_circle_fill,
-                            color: CupertinoColors.systemRed,
-                            size: 28,
-                          ),
-                          SizedBox(width: 8),
-                          const Text('PR and Tube Check'),
-                        ],
-                      ),
-                      content: Text(
-                        'PR ID: $p_old_pr_id and Tube ID: $scanContent do not match. Please scan again.',
-                      ),
-                      actions: [
-                        CupertinoDialogAction(
-                          child: const Text('I Know'),
-                          onPressed: () => Navigator.of(context).pop(),
+                builder: (context) {
+                  return CupertinoAlertDialog(
+                    title: Row(
+                      children: [
+                        Icon(
+                          CupertinoIcons.exclamationmark_circle_fill,
+                          color: CupertinoColors.systemRed,
+                          size: 28,
                         ),
+                        SizedBox(width: 8),
+                        const Text('PR and Tube Check'),
                       ],
                     ),
+                    content: Text(
+                      'PR ID: $p_old_pr_id and Tube ID: $scanContent do not match. Please scan again.',
+                    ),
+                    actions: [
+                      CupertinoDialogAction(
+                        child: const Text('I Know'),
+                        onPressed: () {
+                          setState(() {
+                            _isPaused = false;
+                          });
+                          _scannerController.start();
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
               );
             }
           }
@@ -194,8 +208,8 @@ class _PageFun1State extends State<PageCunsume> {
           // TUBE開頭+6位數字，可依實際需求調整
           if (PrmsDataCheck.isValidTubeId(scanContent)) {
             if (p_old_tube_id.trim().isNotEmpty &&
-                p_old_tube_id.trim() != scanContent.trim()) {
-              // 如果新PR ID和旧PR ID不同，才允许更新
+                p_old_tube_id.trim() == scanContent.trim()) {
+              // PR ID 和 Tube ID 必须匹配 ， 这是动作检查点
               setState(() {
                 p_new_tube_id = scanContent;
                 page_stage = "Complete";
