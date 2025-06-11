@@ -1,18 +1,16 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-
 import 'package:prmsapp/utility/prms_data_check.dart';
 import 'package:prmsapp/widgets/global_nav_bar.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'main_page.dart';
+import 'package:prmsapp/services/prms_api.dart';
 
 class PageCunsume extends StatefulWidget {
   final GlobalKey<GlobalNavBarState>? navBarKey;
   const PageCunsume({super.key, this.navBarKey});
-
   @override
   State<PageCunsume> createState() => _PageFun1State();
 }
@@ -28,7 +26,6 @@ class _PageFun1State extends State<PageCunsume> {
   );
 
   final Key _scannerVisibilityKey = UniqueKey();
-
   // 分别为5个阶段的处理作业
   // User , Machine , Old_PR , Old_Tube ,Nozzle, New_PR, New_Tube , Complete
   String page_stage =
@@ -43,7 +40,6 @@ class _PageFun1State extends State<PageCunsume> {
   String p_new_tube_id = "";
 
   bool _isButtonPressed = false;
-
   @override
   void initState() {
     super.initState();
@@ -75,7 +71,7 @@ class _PageFun1State extends State<PageCunsume> {
   }
 
   /// 處理掃描結果，支援單次與連續模式，並彈出對話框或更新畫面
-  void _handleScan(BarcodeCapture barcodes) {
+  void _handleScan(BarcodeCapture barcodes) async {
     // 加入冷卻時間判斷，避免因為相機畫面殘影、手抖、或多條碼同時入鏡時，短時間內重複觸發掃描
     // final now = DateTime.now();
     // if (_lastScanTime != null &&
@@ -126,10 +122,50 @@ class _PageFun1State extends State<PageCunsume> {
           // 当符合 Old Tube ID 的格式时，才会更新 p_old_pr_id
           // TUBE開頭+6位數字，可依實際需求調整
           if (PrmsDataCheck.isValidTubeId(scanContent)) {
-            setState(() {
-              p_old_tube_id = scanContent;
-              page_stage = "Nozzle";
-            });
+            // 在这个阶段需要在 api 检查 p_old_pr_id 和 p_old_tube_id 是否匹配
+            // 如果匹配失败，弹出对话框提示
+
+            var isMatch = await PrmsApi.checkPrAndTubeMatch(
+              p_old_pr_id,
+              p_old_tube_id,
+            );
+            if (isMatch == false) {
+              setState(() {
+                p_old_tube_id = scanContent;
+                page_stage = "Nozzle";
+              });
+            } else {
+              setState(() {
+                p_old_tube_id = "";
+                page_stage = "Old_Tube";
+              });
+              showCupertinoDialog(
+                context: context,
+                builder:
+                    (context) => CupertinoAlertDialog(
+                      title: Row(
+                        children: [
+                          Icon(
+                            CupertinoIcons.exclamationmark_circle_fill,
+                            color: CupertinoColors.systemRed,
+                            size: 28,
+                          ),
+                          SizedBox(width: 8),
+                          const Text('PR and Tube Check'),
+                        ],
+                      ),
+                      content: Text(
+                        'PR ID: $p_old_pr_id and Tube ID: $scanContent do not match. Please scan again.',
+                      ),
+                      actions: [
+                        CupertinoDialogAction(
+                          child: const Text('I Know'),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
+                      ],
+                    ),
+              );
+            }
           }
         } else if (page_stage == "Nozzle") {
           // 当符合 Old Tube ID 的格式时，才会更新 p_old_pr_id
@@ -1040,8 +1076,10 @@ class _PageFun1State extends State<PageCunsume> {
                                             borderRadius: BorderRadius.circular(
                                               20.0,
                                             ),
-                                            onPressed: () => _scannerController
-                                                .switchCamera(),
+                                            onPressed:
+                                                () =>
+                                                    _scannerController
+                                                        .switchCamera(),
                                             child: Icon(
                                               CupertinoIcons.camera_rotate,
                                               size: deviceSize.width * 0.06,

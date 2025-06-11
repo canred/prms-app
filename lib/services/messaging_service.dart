@@ -15,6 +15,10 @@ class PushNotificationService {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print('User granted permission');
 
+      // 取得 APNS Token（僅限 iOS）
+      String? apnsToken = await _firebaseMessaging.getAPNSToken();
+      print("APNS Token: $apnsToken");
+
       // 取得 FCM Token
       String? token = await _firebaseMessaging.getToken();
       print("FCM Token: $token");
