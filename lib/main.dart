@@ -3,6 +3,8 @@ import 'package:flutter/services.dart'; // 引入services套件以設定系統UI
 import 'package:prmsapp/services/messaging_service.dart';
 import 'package:prmsapp/pages/main_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:prmsapp/providers/auth_provider.dart';
 
 /// ViScanner應用程序主入口點
 void main() async {
@@ -36,15 +38,18 @@ class PrmsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoApp(
-      // 改用 CupertinoApp
-      debugShowCheckedModeBanner: false,
-      theme: const CupertinoThemeData(
-        // 設定亮色主題
-        brightness: Brightness.light,
-        //primaryColor: CupertinoColors.systemBlue,
+    return ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
+      child: CupertinoApp(
+        // 改用 CupertinoApp
+        debugShowCheckedModeBanner: false,
+        theme: const CupertinoThemeData(
+          // 設定亮色主題
+          brightness: Brightness.light,
+          //primaryColor: CupertinoColors.systemBlue,
+        ),
+        home: MainPage(title: 'PRMS APP main'), // 直接使用 MainPage 作為首頁
       ),
-      home: MainPage(title: 'PRMS APP main'), // 直接使用 MainPage 作為首頁
     );
   }
 }

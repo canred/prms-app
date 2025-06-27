@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:prmsapp/widgets/user_profile_card.dart';
 import 'package:provider/provider.dart';
 import '../widgets/keyboard_wizard_card.dart';
@@ -31,8 +30,15 @@ class _SettingsFormState extends State<SettingsForm> {
 
   @override
   Widget build(BuildContext context) {
-    final auth = Provider.of<AuthProvider>(context);
+    // 使用 Consumer 來安全地獲取 AuthProvider，避免異常影響 UI
+    return Consumer<AuthProvider>(
+      builder: (context, auth, child) {
+        return _buildContent(context, auth);
+      },
+    );
+  }
 
+  Widget _buildContent(BuildContext context, AuthProvider auth) {
     return Stack(
       children: [
         CupertinoPageScaffold(
@@ -74,7 +80,7 @@ class _SettingsFormState extends State<SettingsForm> {
                                 ],
                               ),
                         );
-                      } catch (e, stack) {
+                      } catch (e) {
                         if (!mounted) return;
 
                         showCupertinoDialog(
@@ -114,75 +120,23 @@ class _SettingsFormState extends State<SettingsForm> {
                     },
                   ),
                 ),
-
-                // 第三張卡片 - Keyboard Wizard
-                SliverToBoxAdapter(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 12.0,
-                      horizontal: 16.0,
-                    ),
-                    child: KeyboardWizardCard(),
-                  ),
-                ),
               ],
             ),
           ),
         ),
-        if (auth.isAuthLoading)
-          Positioned.fill(
-            child: Container(
-              color: CupertinoColors.systemGrey.withOpacity(0.3),
-              child: const Center(
-                child: SpinKitFadingCircle(
-                  color: CupertinoColors.activeBlue,
-                  size: 48.0,
-                ),
-              ),
-            ),
-          ),
+        // if (auth.isAuthLoading)
+        //   Positioned.fill(
+        //     child: Container(
+        //       color: CupertinoColors.systemGrey.withOpacity(0.3),
+        //       child: const Center(
+        //         child: SpinKitFadingCircle(
+        //           color: CupertinoColors.activeBlue,
+        //           size: 48.0,
+        //         ),
+        //       ),
+        //     ),
+        //   ),
       ],
-    );
-  }
-
-  Future<int> _getPrefsSize() async {
-    final directory = await SharedPreferences.getInstance();
-    int total = 0;
-    for (final key in directory.getKeys()) {
-      final value = directory.get(key);
-      total += key.length;
-      if (value is String) {
-        total += value.length;
-      } else if (value is List) {
-        total += value.toString().length;
-      } else if (value != null) {
-        total += value.toString().length;
-      }
-    }
-    return total;
-  }
-
-  Future<void> _clearCacheAndShowResult() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-
-    setState(() {});
-    if (!mounted) return; // 再次檢查，確保 context 有效
-    showCupertinoDialog(
-      context: context,
-      builder:
-          (ctx) => CupertinoAlertDialog(
-            title: const Text('Cache cleared'),
-            content: const Text(
-              'All cached data and error logs have been removed.',
-            ),
-            actions: [
-              CupertinoDialogAction(
-                child: const Text('OK'),
-                onPressed: () => Navigator.of(ctx).pop(),
-              ),
-            ],
-          ),
     );
   }
 }

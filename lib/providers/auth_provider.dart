@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:prmsapp/services/auth_service.dart';
+import 'package:msal_auth/msal_auth.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -23,12 +24,15 @@ class AuthProvider extends ChangeNotifier {
   Future<void> _silentLogin() async {
     isAuthLoading = true;
     notifyListeners();
-    final result = await _authService.acquireTokenSilent();
-    if (result != null) {
-      isLoggedIn = true;
-      _accessToken = result.accessToken;
-      await fetchUserProfile();
-    } else {
+    try {
+      final result = await _authService.acquireTokenSilent();
+      if (result != null) {
+        isLoggedIn = true;
+        _accessToken = result.accessToken;
+        await fetchUserProfile();
+      }
+    } catch (e) {
+      // 如果靜默登入失敗，則重置狀態
       isLoggedIn = false;
       userName = 'Please login';
       userEmail = '';

@@ -16,23 +16,29 @@ class PushNotificationService {
       print('User granted permission');
 
       // 取得 APNS Token（僅限 iOS）
-      String? apnsToken = await _firebaseMessaging.getAPNSToken();
-      print("APNS Token: $apnsToken");
+      try {
+        String? apnsToken = await _firebaseMessaging.getAPNSToken();
+        print("APNS Token: $apnsToken");
 
-      // 取得 FCM Token
-      String? token = await _firebaseMessaging.getToken();
-      print("FCM Token: $token");
+        // 取得 FCM Token
+        String? token = await _firebaseMessaging.getToken();
+        print("FCM Token: $token");
 
-      // 收到消息時處理
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print(
-          'Received a message in foreground: \\${message.notification?.title}',
-        );
-      });
+        //收到消息時處理
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+          print(
+            'Received a message in foreground: \\${message.notification?.title}',
+          );
+        });
 
-      FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-        print('App opened from notification: \\${message.notification?.title}');
-      });
+        FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+          print(
+            'App opened from notification: \\${message.notification?.title}',
+          );
+        });
+      } catch (e) {
+        print("Error getting APNS/FCM token: $e");
+      }
     }
   }
 }
