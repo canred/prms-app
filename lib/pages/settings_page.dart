@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:prmsapp/providers/auth_provider.dart';
+import 'package:prmsapp/widgets/user_profile_card.dart';
 
 //void main() => runApp(const SettingsScreen());
 
@@ -20,12 +23,20 @@ class SettingsForm extends StatefulWidget {
 
 class _SettingsFormState extends State<SettingsForm> {
   bool darkMode = false; // 原airplaneMode更名为darkMode
-  final TextEditingController _textController = TextEditingController(text: 'Enter'); // 避免重建controller
+  final TextEditingController _textController = TextEditingController(
+    text: 'Enter',
+  ); // 避免重建controller
 
   @override
   void dispose() {
     _textController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // AuthProvider 會自動在建構時執行 _silentLogin
   }
 
   @override
@@ -86,7 +97,7 @@ class _SettingsFormState extends State<SettingsForm> {
                 children: <Widget>[
                   Text('Not connected'),
                   SizedBox(width: 5),
-                  Icon(CupertinoIcons.forward)
+                  Icon(CupertinoIcons.forward),
                 ],
               ),
             ),
@@ -103,9 +114,7 @@ class _SettingsFormState extends State<SettingsForm> {
                   controller: _textController, // 使用持久controller
                 ),
               ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-              ),
+              child: const Row(mainAxisAlignment: MainAxisAlignment.end),
             ),
             const CupertinoFormRow(
               prefix: PrefixWidget(
@@ -114,6 +123,29 @@ class _SettingsFormState extends State<SettingsForm> {
                 color: CupertinoColors.systemGreen,
               ),
               child: Icon(CupertinoIcons.forward),
+            ),
+
+            // 使用者個人檔案卡片
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              child: Consumer<AuthProvider>(
+                builder: (context, auth, child) {
+                  return UserProfileCard(
+                    userName: auth.userName,
+                    userEmail: auth.userEmail,
+                    avatarBytes: auth.userAvatar,
+                    mobilePhone: auth.mobilePhone ?? '',
+                    officeLocation: auth.officeLocation,
+                    isLoggedIn: auth.isLoggedIn,
+                    onLogin: () async {
+                      await auth.signIn();
+                    },
+                    onLogout: () async {
+                      await auth.signOut();
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -147,7 +179,7 @@ class PrefixWidget extends StatelessWidget {
           child: Icon(icon, color: CupertinoColors.white),
         ),
         const SizedBox(width: 15),
-        Text(title)
+        Text(title),
       ],
     );
   }
