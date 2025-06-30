@@ -8,6 +8,7 @@ import 'package:prmsapp/pages/page_move_out_rack.dart';
 import 'package:prmsapp/pages/page_put_on_flow.dart';
 import 'package:prmsapp/pages/page_take_off_flow.dart';
 import 'package:prmsapp/pages/page_clean_flow.dart';
+import 'package:prmsapp/services/prms_api.dart';
 
 class BindingPrmsCard extends StatefulWidget {
   const BindingPrmsCard({super.key});
@@ -159,6 +160,16 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
                   },
                 ),
                 SizedBox(height: 6),
+                // 光阻液解除 Alert
+                _buildCupertinoButton(
+                  context,
+                  icon: CupertinoIcons.refresh_circled, // 更贴合“清除/重置”用途的图标
+                  label: '  Check App Version',
+                  onPressed: () {
+                    _showVersionDialog(context);
+                  },
+                ),
+                SizedBox(height: 6),
                 // 计算最后一个按钮和底部版权信息之间的剩余空间
                 Expanded(child: SizedBox()),
                 Padding(
@@ -289,6 +300,126 @@ class _BindingPCCardState extends State<BindingPrmsCard> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showVersionDialog(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: const Text(
+            'App Version',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: CupertinoColors.black,
+            ),
+          ),
+          content: FutureBuilder<Map<String, dynamic>?>(
+            future: PrmsApi.getAppVersion(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 16),
+                    CupertinoActivityIndicator(),
+                    SizedBox(height: 16),
+                    Text('Checking version...'),
+                  ],
+                );
+              } else {
+                final versionData = snapshot.data;
+                final isConnected = versionData?['success'] == true;
+                final serverVersion = versionData?['version'] ?? 'Unknown';
+                final errorMessage = versionData?['error'];
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 16),
+                    const Text(
+                      'PRMS App',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Local Version: 1.0.0+1',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: CupertinoColors.systemGrey,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Server Version: $serverVersion',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color:
+                            isConnected
+                                ? CupertinoColors.systemBlue
+                                : CupertinoColors.systemGrey,
+                        fontWeight:
+                            isConnected ? FontWeight.w500 : FontWeight.normal,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Build: PRMA APP',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: CupertinoColors.systemGrey,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      isConnected
+                          ? 'Server connection: ✓'
+                          : 'Server connection: ✗',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color:
+                            isConnected
+                                ? CupertinoColors.systemGreen
+                                : CupertinoColors.systemRed,
+                      ),
+                    ),
+                    if (!isConnected && errorMessage != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        errorMessage,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: CupertinoColors.systemRed,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ],
+                );
+              }
+            },
+          ),
+          actions: [
+            CupertinoDialogAction(
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  color: CupertinoColors.activeBlue,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

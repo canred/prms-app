@@ -146,60 +146,6 @@ class _PageFun1State extends State<PageCunsume> {
                 );
               },
             );
-
-            var isMatch = await PrmsApi.checkPrAndTubeMatch(
-              p_old_pr_id,
-              p_old_tube_id,
-            );
-
-            if (isMatch == false) {
-              setState(() {
-                p_old_tube_id = scanContent;
-                page_stage = "Nozzle";
-              });
-            } else {
-              setState(() {
-                p_old_tube_id = "";
-                page_stage = "Old_Tube";
-                _isPaused = true;
-              });
-              showCupertinoDialog(
-                context: context,
-                builder: (context) {
-                  return CupertinoAlertDialog(
-                    title: Row(
-                      children: [
-                        Icon(
-                          CupertinoIcons.exclamationmark_circle_fill,
-                          color: CupertinoColors.systemRed,
-                          size: 28,
-                        ),
-                        SizedBox(width: 8),
-                        const Text('PR and Tube Check'),
-                      ],
-                    ),
-                    content: Text(
-                      'PR ID: $p_old_pr_id and Tube ID: $scanContent do not match. Please scan again.',
-                    ),
-                    actions: [
-                      CupertinoDialogAction(
-                        child: const Text('I Know'),
-                        onPressed: () {
-                          setState(() {
-                            _isPaused = false;
-                          });
-
-                          Navigator.of(context).pop();
-                          // 关闭 Loading 对话框
-                          Navigator.of(context).pop();
-                          _scannerController.start();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
           }
         } else if (page_stage == "Nozzle") {
           // 当符合 Old Tube ID 的格式时，才会更新 p_old_pr_id
